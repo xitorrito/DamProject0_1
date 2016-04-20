@@ -1,4 +1,4 @@
-package ;
+package com.example.xito.damproject01;
  
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  
 public class DBManager extends SQLiteOpenHelper {
  
-    //Sentencia SQL para crear la tabla de Usuarios
+    //Sentencia SQL para crear las tablas
     String sqlCreate = "CREATE TABLE Usuarios (codigo INTEGER, nombre TEXT)";
  
     public UsuariosSQLiteHelper(Context contexto, String nombre,
