@@ -1,3 +1,4 @@
+package com.example.xito.damproject01;
 
 public class Levels{
   
@@ -15,17 +16,19 @@ public class Levels{
   // get a level minimum exp
   public int getExperience (int level)
   {
-      return Math.ceil((double)max_exp / Math.pow(2, max_level-level));
+     // return Math.ceil((double)max_exp / Math.pow(2, max_level-level));
+    return level;
   }
   
   public int getExpForNextLevel(int level){
-      return 
+      return 0;
   }
 
   // get current level
-  public int level getLevel (int exp)
+  public int getLevel (int exp)
   {
-      return Math.floor((double)max_level - (Math.log2(max_exp) - Math.log2(exp)));
+     // return Math.floor((double)max_level - (Math.log2(max_exp) - Math.log2(exp)));
+    return exp;
   }
   
   

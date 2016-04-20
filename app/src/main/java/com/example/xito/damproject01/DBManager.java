@@ -1,5 +1,6 @@
 package com.example.xito.damproject01;
  
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -8,17 +9,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBManager extends SQLiteOpenHelper {
  
     //Sentencia SQL para crear las tablas
-    String createTableJugador = "CREATE TABLE IF NOT EXISTS Jugador (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, nivel INTEGER, exp INTEGER, 
-    dinero INTEGER)";
-    String createTableTareas = "CREATE TABLE IF NOT EXISTS Tareas (id INTEGER PRIMARY KEY AUTOINCREMENT, tarea TEXT, nivelMin INTEGER, recompensaExp INTEGER,
-    recompensaDinero INTEGER)";
-    String createTableTienda = "CREATE TABLE IF NOT EXISTS Tienda (id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT, descripcion TEXT, precioMonedas INTEGER, 
-    precioItems INTEGER)";
+    String createTableJugador = "CREATE TABLE IF NOT EXISTS Jugador (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, nivel" +
+            " INTEGER, exp INTEGER dinero INTEGER)";
+    String createTableTareas = "CREATE TABLE IF NOT EXISTS Tareas (id INTEGER PRIMARY KEY AUTOINCREMENT, tarea TEXT, " +
+            "nivelMin INTEGER, recompensaExp INTEGER,recompensaDinero INTEGER)";
+    String createTableTienda = "CREATE TABLE IF NOT EXISTS Tienda (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " item TEXT, descripcion TEXT, precioMonedas INTEGER, precioItems INTEGER)";
+
+    private static DBManager uniqueInstance;
     
-    
-    public DBManager(Context contexto, String nombre,
-                               CursorFactory factory, int version) {
-        super(contexto, nombre, factory, version);
+    public DBManager(Context context) {
+        super(context, "dbproject.db", null, 1);
     }
  
     @Override
@@ -27,14 +28,23 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(createTableJugador);
         db.execSQL(createTableTareas);
         db.execSQL(createTableTienda);
+        insertData(db);
     }
     
-    public void insertData(){
+    public void insertData(SQLiteDatabase db){
         ContentValues values = new ContentValues();
+        //db.insert("");
 
         
-        values.put(id,id)
+       // values.put();
      
+    }
+
+    public static synchronized DBManager getInstance(Context context) {
+        if (uniqueInstance == null) {
+            uniqueInstance = new DBManager(context.getApplicationContext());
+        }
+        return uniqueInstance;
     }
  
     @Override
@@ -46,8 +56,6 @@ public class DBManager extends SQLiteOpenHelper {
  
         //Se elimina la versión anterior de la tabla
         db.execSQL("DROP TABLE IF EXISTS Usuarios");
- 
-        //Se crea la nueva versión de la tabla
-        db.execSQL(sqlCreate);
+
     }
 }
