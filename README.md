@@ -1,4 +1,4 @@
-ggJugador
+Jugador
   -idJugador
   -Nombre
   -xp
@@ -28,4 +28,6 @@ Items
 
 
 http://i.imgur.com/ijPWMLA.png
+
+https://my.vertabelo.com/model/GaWCTrYG1Np9skFElbvHMarhFkFyNZ2E
   
