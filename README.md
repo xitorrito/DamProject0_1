@@ -27,7 +27,9 @@ Items
 
 
 
-http://i.imgur.com/ijPWMLA.png
+DB PNG: http://i.imgur.com/ijPWMLA.png
 
-https://my.vertabelo.com/model/GaWCTrYG1Np9skFElbvHMarhFkFyNZ2E
+DB: https://my.vertabelo.com/model/GaWCTrYG1Np9skFElbvHMarhFkFyNZ2E
+
+Font: http://www.dafont.com/es/lipby-chonk.font?text=Unethic+Hack&sort=date&back=bitmap
   
