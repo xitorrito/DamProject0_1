@@ -8,9 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBManager extends SQLiteOpenHelper {
  
     //Sentencia SQL para crear las tablas
-    String sqlCreate = "CREATE TABLE Usuarios (codigo INTEGER, nombre TEXT)";
- 
-    public UsuariosSQLiteHelper(Context contexto, String nombre,
+    String createTableJugador = "CREATE TABLE IF NOT EXISTS Jugador (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, nivel INTEGER, exp INTEGER, 
+    dinero INTEGER)";
+    String createTableTareas = "CREATE TABLE IF NOT EXISTS Tareas (id INTEGER PRIMARY KEY AUTOINCREMENT, tarea TEXT, nivelMin INTEGER, recompensaExp INTEGER,
+    recompensaDinero INTEGER)";
+    String createTableTienda = "CREATE TABLE IF NOT EXISTS Tienda (id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT, descripcion TEXT, precioMonedas INTEGER, 
+    precioItems INTEGER)";
+    
+    
+    public DBManager(Context contexto, String nombre,
                                CursorFactory factory, int version) {
         super(contexto, nombre, factory, version);
     }
@@ -18,11 +24,21 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //Se ejecuta la sentencia SQL de creación de la tabla
-        db.execSQL(sqlCreate);
+        db.execSQL(createTableJugador);
+        db.execSQL(createTableTareas);
+        db.execSQL(createTableTienda);
+    }
+    
+    public void insertData(){
+        ContentValues values = new ContentValues();
+
+        
+        values.put(id,id)
+     
     }
  
     @Override
-    public void onUpgrade(SQLiteDatabase db, int versionAnterior, int versionNueva) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //NOTA: Por simplicidad del ejemplo aquí utilizamos directamente la opción de
         //      eliminar la tabla anterior y crearla de nuevo vacía con el nuevo formato.
         //      Sin embargo lo normal será que haya que migrar datos de la tabla antigua
