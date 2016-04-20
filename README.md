@@ -1,4 +1,4 @@
-Jugador
+ggJugador
   -idJugador
   -Nombre
   -xp
