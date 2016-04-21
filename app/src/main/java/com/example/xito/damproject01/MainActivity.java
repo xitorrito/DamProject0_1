@@ -31,6 +31,27 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        
+        
+        
+        
+        
+    }
+    
+    public void setPlayerStates() {
+        Cursor cursor = bd.query("player",nivel, null,null,null,null,null);
+        //Vamos a la primera fila.
+        cursor.moveToFirst();
+        //Obtenemos el dato de la primera (y única) columna.
+        int coins = cursor.getInt(0);
+        
+        Cursor cursor = bd.query("player",exp, null,null,null,null,null);
+        //Vamos a la primera fila.
+        cursor.moveToFirst();
+        //Obtenemos el dato de la primera (y única) columna.
+        int level = cursor.getInt(0);
+        
+        
     }
 
     private void setupViewPager(ViewPager viewPager) {
