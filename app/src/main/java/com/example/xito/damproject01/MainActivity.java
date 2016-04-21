@@ -1,5 +1,6 @@
 package com.example.xito.damproject01;
 
+import android.database.Cursor;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,36 +31,48 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         tabLayout.setupWithViewPager(viewPager);
-        
-        
-        
-        
-        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false); //Remove the HomeAsUpButton arrow
+
+        setTabIcons(tabLayout);
+
+
+
+
+
     }
-    
+    /*
     public void setPlayerStates() {
-        Cursor cursor = bd.query("player",nivel, null,null,null,null,null);
+        Cursor cursor = db.query("player",nivel, null,null,null,null,null);
         //Vamos a la primera fila.
         cursor.moveToFirst();
         //Obtenemos el dato de la primera (y única) columna.
         int coins = cursor.getInt(0);
-        
+
         Cursor cursor = bd.query("player",exp, null,null,null,null,null);
         //Vamos a la primera fila.
         cursor.moveToFirst();
         //Obtenemos el dato de la primera (y única) columna.
         int level = cursor.getInt(0);
-        
-        
-    }
+
+}
+        */
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Fragment1(), "ONE");
-        adapter.addFragment(new Fragment2(), "TWO");
-        adapter.addFragment(new Fragment3(), "THREE");
+        adapter.addFragment(new Fragment1(), "");
+        adapter.addFragment(new Fragment2(), "");
+        adapter.addFragment(new Fragment3(), "");
         viewPager.setAdapter(adapter);
+
+
+    }
+
+    public void setTabIcons(TabLayout tabIcons) {
+        tabLayout.getTabAt(0).setIcon(R.drawable.pc_icon );
+        tabLayout.getTabAt(1).setIcon(R.drawable.coin_icon);
+        tabLayout.getTabAt(2).setIcon(R.drawable.tasks_icon);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
