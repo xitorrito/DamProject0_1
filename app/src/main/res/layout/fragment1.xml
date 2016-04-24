@@ -2,24 +2,116 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="com.example.xito.damproject01.Fragment1"
+tools:context=".Fragments.Fragment1"
     >
-    <LinearLayout
+   <!-- <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/background"
-        >
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
+       android:background="@drawable/background"
+-->
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ggg"
-            android:textSize="40dp"
+            android:text="@string/levelText"
+            android:textSize="15dp"
             android:textStyle="bold"
-            android:layout_centerInParent="true"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/textView_level"
+            android:textColor="#64dd17"
+            android:layout_marginRight="6dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_levelNumber"
+            android:layout_alignTop="@+id/textView_level"
+            android:layout_toRightOf="@+id/textView_level"
+            android:layout_toEndOf="@+id/textView_level"
+            android:layout_marginRight="15dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/xpText"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_xpText"
+            android:focusableInTouchMode="false"
+            android:textColor="@color/ligh_green_700"
+            android:layout_alignTop="@+id/textView_levelNumber"
+            android:layout_toRightOf="@+id/textView_levelNumber"
+            android:layout_toEndOf="@+id/textView_levelNumber"
+            android:layout_marginRight="6dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/100"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_xp"
+            android:layout_alignTop="@+id/textView_xpText"
+            android:layout_toRightOf="@+id/textView_xpText"
+            android:layout_toEndOf="@+id/textView_xpText"
+            android:layout_marginRight="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/moneyText"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_moneyText"
+            android:focusableInTouchMode="false"
+            android:textColor="@color/ligh_green_700"
+            android:layout_alignTop="@+id/textView_MoneyNumber"
+            android:layout_toLeftOf="@+id/textView_MoneyNumber"
+            android:layout_toStartOf="@+id/textView_MoneyNumber"
+            android:layout_marginRight="6dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20$"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_MoneyNumber"
+            android:layout_alignTop="@+id/textView_xp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_gravity="center"
+        android:src="@drawable/facepc"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gay"
+        android:id="@+id/buttonGoTab"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

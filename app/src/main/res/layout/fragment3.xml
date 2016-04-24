@@ -2,7 +2,7 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="com.example.xito.damproject01.Fragment3">
+tools:context=".Fragments.Fragment3">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -10,20 +10,11 @@ tools:context="com.example.xito.damproject01.Fragment3">
         android:layout_height="wrap_content"
         android:text="YEE"
         android:id="@+id/textView_Coins"
-        android:layout_above="@+id/imageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="15dp"
-        android:layout_marginLeft="15dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_gravity="center"
-        android:src="@drawable/facepc"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,7 +23,6 @@ tools:context="com.example.xito.damproject01.Fragment3">
         android:id="@+id/textView_totalCoins"
         android:layout_alignBaseline="@+id/textView_Coins"
         android:layout_alignBottom="@+id/textView_Coins"
-        android:layout_alignLeft="@+id/imageView"
-        android:layout_alignStart="@+id/imageView" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
