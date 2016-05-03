@@ -1,4 +1,4 @@
-package com.example.xito.damproject01;
+package com.example.xito.damproject01.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

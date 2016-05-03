@@ -7,4 +7,11 @@
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#c8e8ff</color>
     <color name="ligh_green_700">#64dd17</color>
+    <color name="text_green">#33cb00</color>
+    <color name="material_grey_400">#bdbdbd</color>
+    <color name="material_green_500">#4caf50</color>
+    <color name="material_light_green_100">#dcedc8</color>
+    <color name="material_grey_100">#f5f5f5</color>
+    <color name="material_teal_600">#00897b</color>
+    <color name="material_pink_900">#880e4f</color>
 </resources>

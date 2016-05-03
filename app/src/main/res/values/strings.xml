@@ -8,4 +8,5 @@
     <string name="tasksText">Tareas:</string>
     <string name="descriptionTaskText">Descripción</string>
     <string name="shopText">Tienda</string>
+    <string name="rewards">Recompensas: </string>
 </resources>

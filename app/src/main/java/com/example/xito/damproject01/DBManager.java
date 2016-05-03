@@ -5,14 +5,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
- 
+
+import java.util.ArrayList;
+
 public class DBManager extends SQLiteOpenHelper {
  
     //Sentencia SQL para crear las tablas
-    String createTableJugador = "CREATE TABLE IF NOT EXISTS Jugador (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, nivel" +
-            " INTEGER, exp INTEGER dinero INTEGER)";
-    String createTableTareas = "CREATE TABLE IF NOT EXISTS Tareas (id INTEGER PRIMARY KEY AUTOINCREMENT, tarea TEXT, " +
-            "nivelMin INTEGER, recompensaExp INTEGER,recompensaDinero INTEGER)";
+    String createTableJugador = "CREATE TABLE IF NOT EXISTS Player (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, level" +
+            " INTEGER, exp INTEGER money INTEGER)";
+    String createTableTareas = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, " +
+            "description TEXT, minLevel INTEGER, rewardExp INTEGER,rewardMoney INTEGER)";
     String createTableTienda = "CREATE TABLE IF NOT EXISTS Tienda (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " item TEXT, descripcion TEXT, precioMonedas INTEGER, precioItems INTEGER)";
 
@@ -27,8 +29,9 @@ public class DBManager extends SQLiteOpenHelper {
         //Se ejecuta la sentencia SQL de creación de la tabla
         db.execSQL(createTableJugador);
         db.execSQL(createTableTareas);
-        db.execSQL(createTableTienda);
-        insertData(db);
+       // db.execSQL(createTableTienda);
+        //insertData(db);
+        insertTasks(db);
     }
     
     public void insertData(SQLiteDatabase db){
@@ -49,13 +52,87 @@ public class DBManager extends SQLiteOpenHelper {
  
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //NOTA: Por simplicidad del ejemplo aquí utilizamos directamente la opción de
-        //      eliminar la tabla anterior y crearla de nuevo vacía con el nuevo formato.
-        //      Sin embargo lo normal será que haya que migrar datos de la tabla antigua
-        //      a la nueva, por lo que este método debería ser más elaborado.
- 
-        //Se elimina la versión anterior de la tabla
+
         db.execSQL("DROP TABLE IF EXISTS Usuarios");
+
+    }
+
+    private void insertTasks(SQLiteDatabase db){
+
+        ContentValues contentValues = new ContentValues();
+
+
+        ArrayList<String>taskName = new ArrayList<>();
+        ArrayList<String>taskDescription = new ArrayList<>();
+        ArrayList<Integer>taskMinLevel = new ArrayList<>();
+        ArrayList<Integer>taskRewardExp = new ArrayList<>();
+        ArrayList<Integer>taskRewardMoney = new ArrayList<>();
+
+        //0
+        taskName.add("Espiar mensajes del movil de gente");
+        taskDescription.add("");
+        taskMinLevel.add(1);
+        taskRewardExp.add(10);
+        taskRewardMoney.add(5);
+
+        //1
+        taskName.add("Hackear web del vecino");
+        taskDescription.add("Se lo merece por hacer tantos ruiditos");
+        taskMinLevel.add(1);
+        taskRewardExp.add(20);
+        taskRewardMoney.add(10);
+        //2
+        taskName.add("Robar dinero de sucursal bancaria");
+        taskDescription.add("");
+        taskMinLevel.add(2);
+        taskRewardExp.add(35);
+        taskRewardMoney.add(50);
+        //3
+        taskName.add("Manipular semaforos");
+        taskDescription.add("");
+        taskMinLevel.add(3);
+        taskRewardExp.add(35);
+        taskRewardMoney.add(15);
+        //4
+        taskName.add("Hackerman"); //Boss
+        taskDescription.add("Derrota a Hackerman");
+        taskMinLevel.add(4);
+        taskRewardExp.add(40);
+        taskRewardMoney.add(100);
+        //5
+        taskName.add("Celebgate");
+        taskDescription.add("Publica fotos intimas de famosas");
+        taskMinLevel.add(5);
+        taskRewardExp.add(80);
+        taskRewardMoney.add(20);
+        //6
+        taskName.add("Publicar documentos privados del gobierno");
+        taskDescription.add("");
+        taskMinLevel.add(5);
+        taskRewardExp.add(140);
+        taskRewardMoney.add(60);
+        //7
+        taskName.add("Robar dinero de la sede de un banco");
+        taskDescription.add("");
+        taskMinLevel.add(6);
+        taskRewardExp.add(170);
+        taskRewardMoney.add(90);
+
+
+        for (int i = 0; i <8 ; i++) {
+            contentValues.put("task",taskName.get(i));
+            contentValues.put("description",taskDescription.get(i));
+            contentValues.put("minLevel",taskMinLevel.get(i));
+            contentValues.put("rewardExp",taskRewardExp.get(i));
+            contentValues.put("rewardMoney",taskRewardMoney.get(i));
+            db.insert("tasks",null, contentValues);
+        }
+
+
+//        registro.put("codigo", cod);
+//        registro.put("descripcion", descri);
+//        registro.put("precio", pre);
+//        db.insert("tareas", null, registro);
 
     }
 }

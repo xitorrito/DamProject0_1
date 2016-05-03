@@ -1,12 +1,13 @@
 package com.example.xito.damproject01;
 
-import android.graphics.Typeface;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.example.xito.damproject01.Adapters.ViewPagerAdapter;
 import com.example.xito.damproject01.Fragments.Fragment1;
 import com.example.xito.damproject01.Fragments.Fragment2;
 import com.example.xito.damproject01.Fragments.Fragment3;
@@ -15,12 +16,15 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private DBManager dbManager;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTabMenu();
+        dbManager = new DBManager(this);
     }
 
 
