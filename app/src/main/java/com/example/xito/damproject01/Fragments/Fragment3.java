@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class Fragment3 extends Fragment {
     private Cursor c;
     private Typeface font;
     private TasksAdapter customAdapter;
+    private RecyclerView recyclerView;
 
     public Fragment3() {
         // Required empty public constructor
@@ -57,7 +60,7 @@ public class Fragment3 extends Fragment {
                 rewardExp = c.getInt(3);
                 rewardMoney = c.getInt(4);
 
-                tasks.add(new Tasks(taskId,taskName, taskDescription, rewardExp + "", rewardMoney + ""));
+                //tasks.add(new Tasks(taskId,taskName, taskDescription, rewardExp + "", rewardMoney + ""));
 
             } while (c.moveToNext());
         }
@@ -76,17 +79,20 @@ public class Fragment3 extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //d
+
         listView = (ListView) getView().findViewById(R.id.listView_tasks);
         listView.setAdapter(null);
         listView.setAdapter(customAdapter);
-        Log.e("create","he sido creado2");
+
+//        recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerView.setAdapter(customAdapter);
 
     }
 
     private List<Tasks> getTasks(){
         List<Tasks> tasks=new ArrayList<>();
-        tasks.add(new Tasks(1,"Robar sucursal bancaria", "Seguro que ni lo notan", "50xp","350$"));
+       // tasks.add(new Tasks(1,"Robar sucursal bancaria", "Seguro que ni lo notan", "50xp","350$"));
         return tasks;
     }
 

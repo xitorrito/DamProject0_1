@@ -24,6 +24,8 @@ public class TasksAdapter extends BaseAdapter  {
     private List<Tasks> tasks;
     private Typeface font;
     private SQLiteDatabase db;
+    private Tasks task;
+    private int taskMinLevel;
 
 
     public TasksAdapter(Context context, List<Tasks> tasks, Typeface font, SQLiteDatabase db) {
@@ -80,15 +82,20 @@ public class TasksAdapter extends BaseAdapter  {
         viewHolder.taskRewardExp.setTypeface(font);
         viewHolder.raskRewardMoney.setTypeface(font);
 
-        viewHolder.taskName.setText(tasks.get(position).getTaskName());
-        viewHolder.taskDescription.setText(tasks.get(position).getTaskDescription());
-        viewHolder.taskRewardExp.setText(tasks.get(position).getTaskRewardExp()+"XP");
-        viewHolder.raskRewardMoney.setText(tasks.get(position).getTaskRewardMoney()+"$");
+        task = tasks.get(position);
+        taskMinLevel= task.getTaskMinLevel();
+        //if(taskMinLevel>playerLevel)
+
+
+        viewHolder.taskName.setText(task.getTaskName());
+        viewHolder.taskDescription.setText(task.getTaskDescription());
+        viewHolder.taskRewardExp.setText(task.getTaskRewardExp()+"XP");
+        viewHolder.raskRewardMoney.setText(task.getTaskRewardMoney()+"$");
         //viewHolder.cuadroFoto.setImageResource(cuadros.get(position).getPainting());
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Nombre", tasks.get(position).getTaskName());
+                Log.e("Nombre", task.getTaskName());
 
             }
         });

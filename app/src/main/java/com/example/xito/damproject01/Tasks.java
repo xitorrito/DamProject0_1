@@ -6,27 +6,38 @@ package com.example.xito.damproject01;
 public class Tasks {
     private int taskId;
     private String taskName;
-    private String taskRewardExp;
-    private String taskRewardMoney;
+    private int taskRewardExp;
+    private int taskRewardMoney;
     private String taskDescription;
+    private int taskMinLevel;
 
-    public Tasks(int taskId, String taskName,String taskDescription, String taskRewardExp, String taskRewardMoney) {
+
+    public Tasks(int taskId, String taskName,String taskDescription, int taskRewardExp, int taskRewardMoney, int taskMinLevel) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskRewardExp = taskRewardExp;
         this.taskRewardMoney = taskRewardMoney;
         this.taskDescription = taskDescription;
+        this.taskMinLevel = taskMinLevel;
+    }
+
+    public int getTaskMinLevel() {
+        return taskMinLevel;
+    }
+
+    public void setTaskMinLevel(int taskMinLevel) {
+        this.taskMinLevel = taskMinLevel;
     }
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
 
-    public void setTaskRewardExp(String taskRewardExp) {
+    public void setTaskRewardExp(int taskRewardExp) {
         this.taskRewardExp = taskRewardExp;
     }
 
-    public void setTaskRewardMoney(String taskRewardMoney) {
+    public void setTaskRewardMoney(int taskRewardMoney) {
         this.taskRewardMoney = taskRewardMoney;
     }
 
@@ -43,12 +54,12 @@ public class Tasks {
         return taskDescription;
     }
 
-    public String getTaskRewardExp() {
+    public int getTaskRewardExp() {
         return taskRewardExp;
     }
 
 
-    public String getTaskRewardMoney() {
+    public int getTaskRewardMoney() {
         return taskRewardMoney;
     }
 
