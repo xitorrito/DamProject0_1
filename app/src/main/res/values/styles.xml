@@ -6,7 +6,7 @@
         <item name="android:colorBackground">@color/dim_foreground_material_light</item>
     </style>
 
-    <style name="MaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MaterialTheme.Base" parent="Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
