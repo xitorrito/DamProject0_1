@@ -1,17 +1,21 @@
 package com.example.xito.damproject01.Fragments;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.xito.damproject01.DBManager;
+import com.example.xito.damproject01.Player;
 import com.example.xito.damproject01.R;
 
 
@@ -28,6 +32,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener {
     private Button boton2;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private Player player;
+    private SQLiteDatabase db;
+    private DBManager dbManager;
 
 
     public Fragment1() {
@@ -37,6 +44,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbManager = DBManager.getInstance(getContext());
+        db = dbManager.getWritableDatabase();
+
     }
 
 
@@ -71,6 +81,13 @@ public class Fragment1 extends Fragment implements View.OnClickListener {
         boton1.setTypeface(font);
         boton2.setTypeface(font);
 
+//        Bundle b = getArguments();
+//        player= (Player) b.getSerializable("player");
+        //player=Player.player;
+        player=Player.player;
+        level.setText(player.getPlayerLevel()+"");
+        exp.setText(player.getPlayerExp()+"");
+        money.setText(player.getPlayerMoney()+"");
 
     }
 

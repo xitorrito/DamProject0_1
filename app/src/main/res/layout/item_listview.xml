@@ -1,18 +1,22 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardCornerRadius="3dp"
-        card_view:cardElevation="4dp"
-        card_view:cardBackgroundColor="@color/cardview_light_background">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="@color/cardview_light_background">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:padding="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="7dp"
+            android:paddingTop="7dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:id="@+id/task_name"
@@ -42,7 +46,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginBottom="5dp">
+                android:layout_marginBottom="5dp"
+                android:id="@+id/linearLayout5">
                 <TextView
                     android:id="@+id/recompensas"
                     android:layout_width="wrap_content"
@@ -72,14 +77,32 @@
                     android:layout_height="wrap_content"
                     android:text="100$"
                     android:textSize="12sp"
-                    android:textColor="@color/material_pink_900"
+                    android:textColor="@color/material_teal_600"
                     android:layout_alignTop="@+id/task_reward_exp"
                     android:layout_toRightOf="@+id/task_reward_exp"
                     android:layout_toEndOf="@+id/task_reward_exp" />
 
+
+
             </LinearLayout>
 
-
+            <ProgressBar
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:id="@+id/progressBar_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
+                android:background="@color/material_grey_400"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/material_green_500"
+                android:visibility="invisible"
+                android:layout_alignTop="@+id/linearLayout5"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="15dp"
+                android:progressDrawable="@drawable/progressbar_layout" />
 
         </RelativeLayout>
 </android.support.v7.widget.CardView>

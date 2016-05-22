@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class DBManager extends SQLiteOpenHelper {
  
     //Sentencia SQL para crear las tablas
     String createTableJugador = "CREATE TABLE IF NOT EXISTS Player (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, level" +
-            " INTEGER, exp INTEGER money INTEGER)";
+            " INTEGER, exp INTEGER, money INTEGER)";
     String createTableTareas = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, " +
             "description TEXT, minLevel INTEGER, rewardExp INTEGER,rewardMoney INTEGER)";
     String createTableTienda = "CREATE TABLE IF NOT EXISTS Tienda (id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -32,6 +33,9 @@ public class DBManager extends SQLiteOpenHelper {
        // db.execSQL(createTableTienda);
         //insertData(db);
         insertTasks(db);
+        insertPlayer(db);
+        Log.e("bd creada","soy la bd");
+        //Player.insertPlayer(db);
     }
     
     public void insertData(SQLiteDatabase db){
@@ -53,7 +57,7 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("DROP TABLE IF EXISTS Usuarios");
+        db.execSQL("DROP TABLE IF EXISTS Tasks");
 
     }
 
@@ -69,6 +73,7 @@ public class DBManager extends SQLiteOpenHelper {
         ArrayList<Integer>taskRewardMoney = new ArrayList<>();
 
         //0
+//        taskName.add("Espiar mensajes del movil de gente");
         taskName.add("Espiar mensajes del movil de gente");
         taskDescription.add("");
         taskMinLevel.add(1);
@@ -128,11 +133,20 @@ public class DBManager extends SQLiteOpenHelper {
             db.insert("tasks",null, contentValues);
         }
 
-
 //        registro.put("codigo", cod);
 //        registro.put("descripcion", descri);
 //        registro.put("precio", pre);
 //        db.insert("tareas", null, registro);
 
+    }
+
+    private void insertPlayer(SQLiteDatabase db){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name","Hacker");
+        contentValues.put("level",1);
+        contentValues.put("exp",0);
+        contentValues.put("money",0);
+        db.insert("player",null, contentValues);
+        Player.player = new Player(1,"Hacker",1,0,0);
     }
 }

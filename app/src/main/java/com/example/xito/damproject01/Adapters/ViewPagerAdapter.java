@@ -1,5 +1,6 @@
 package com.example.xito.damproject01.Adapters;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,6 +18,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
 
     public ViewPagerAdapter(FragmentManager manager) {
         super(manager);
+
+
     }
     @Override
     public Fragment getItem(int position) {
@@ -30,6 +33,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
 
     public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
+        //Bundle bundleFeatures = new Bundle();
+       // mFragmentList.get(0).setArguments(bundleFeatures);
+
         mFragmentTitleList.add(title);
     }
 

@@ -1,20 +1,27 @@
 package com.example.xito.damproject01.Fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.xito.damproject01.DBManager;
+import com.example.xito.damproject01.HackDevices;
+import com.example.xito.damproject01.MainActivity;
+import com.example.xito.damproject01.Player;
 import com.example.xito.damproject01.R;
 import com.example.xito.damproject01.Tasks;
 import com.example.xito.damproject01.Adapters.TasksAdapter;
@@ -29,15 +36,26 @@ public class Fragment3 extends Fragment {
     private SQLiteDatabase db;
     private DBManager dbManager;
     private List<Tasks> tasks= new ArrayList<>();
+    private List<Tasks> tasksUnlocked = new ArrayList<>();
     private int taskId;
     private String taskName;
     private String taskDescription;
     private int rewardExp;
     private int rewardMoney;
+    private int minLevel;
     private Cursor c;
     private Typeface font;
     private TasksAdapter customAdapter;
     private RecyclerView recyclerView;
+    private Player player;
+    private TextView levelText;
+    private TextView level;
+    private TextView expText;
+    private TextView exp;
+    private TextView moneyText;
+    private TextView money;
+    private TextView title;
+    private int playerLevel;
 
     public Fragment3() {
         // Required empty public constructor
@@ -47,32 +65,63 @@ public class Fragment3 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbManager = DBManager.getInstance(getContext());
-        db = dbManager.getWritableDatabase();
-        tasks.removeAll(tasks);
-        Log.e("create","he sido creado");
-        c = db.query("tasks", new String[]{"id","task", "description", "rewardExp", "rewardMoney"}, null, null, null, null, null);
-        if (c.moveToFirst()) {
-            do {
-                taskId = c.getInt(0);
-                taskName = c.getString(1);
-                taskDescription = c.getString(2);
-                rewardExp = c.getInt(3);
-                rewardMoney = c.getInt(4);
 
-                //tasks.add(new Tasks(taskId,taskName, taskDescription, rewardExp + "", rewardMoney + ""));
-
-            } while (c.moveToNext());
-        }
         font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
-        customAdapter= new TasksAdapter(this.getContext(), tasks, font, db);
+        tasks=Tasks.tasks;
+        player = Player.player;
+        playerLevel= player.getPlayerLevel();
+        tasksUnlocked=getUnlockedTasks(playerLevel);
+        customAdapter= new TasksAdapter(getContext(), tasksUnlocked, font, db, getActivity());
+        customAdapter.setOnDataChangeListener(new TasksAdapter.OnDataChangeListener() {
+            @Override
+            public void onDataChanged() {
+                updateTextViews();
+                Log.e("level ondatachanged", player.getPlayerLevel()+"");
+                Log.e("tasks size", tasksUnlocked.size()+"");
+                if(tasksUnlocked.size()<=tasks.size()){
+                    if(tasks.get(tasksUnlocked.size()-1).getTaskMinLevel()==player.getPlayerLevel()){
+                        tasksUnlocked=getUnlockedTasks(playerLevel);
+                        tasksUnlocked.add(getNewUnlockedTask(playerLevel));
+                        customAdapter.notifyDataSetChanged();
+                    }
+                }
 
+
+            }
+
+        });
+
+    }
+
+
+    private Tasks getNewUnlockedTask(int playerLevel) {
+        return tasks.get(tasksUnlocked.size()-1);
+    }
+
+
+
+
+    private void updateTextViews() {
+
+        level.setText(player.getPlayerLevel()+"");
+        exp.setText(player.getPlayerExp()+"");
+        money.setText(player.getPlayerMoney()+"");
+
+    }
+
+    private List<Tasks> getUnlockedTasks(int playerLevel){
+        for (int i = tasksUnlocked.size(); i <tasks.size(); i++) {
+            if(playerLevel>=tasks.get(i).getTaskMinLevel()){
+                tasksUnlocked.add(tasks.get(i));
+            }
+        }
+
+        return tasksUnlocked;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
     }
 
@@ -84,17 +133,39 @@ public class Fragment3 extends Fragment {
         listView.setAdapter(null);
         listView.setAdapter(customAdapter);
 
-//        recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        recyclerView.setAdapter(customAdapter);
+        levelText=(TextView)getView().findViewById(R.id.textView_level);
+        level=(TextView)getView().findViewById(R.id.textView_levelNumber);
+        expText=(TextView)getView().findViewById(R.id.textView_xpText);
+        exp=(TextView)getView().findViewById(R.id.textView_xp);
+        moneyText =(TextView)getView().findViewById(R.id.textView_moneyText);
+        money =(TextView)getView().findViewById(R.id.textView_MoneyNumber);
+
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
+
+        levelText.setTypeface(font);
+        level.setTypeface(font);
+        expText.setTypeface(font);
+        exp.setTypeface(font);
+        moneyText.setTypeface(font);
+        money.setTypeface(font);
+
+        Button button = (Button)getView().findViewById(R.id.hackDevices);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HackDevices.class);
+                startActivity(intent);
+            }
+        });
+
+        updateTextViews();
+
+//        Bundle b = getArguments();
+//        player= (Player) b.getSerializable("player");
+        //player=Player.player;
 
     }
 
-    private List<Tasks> getTasks(){
-        List<Tasks> tasks=new ArrayList<>();
-       // tasks.add(new Tasks(1,"Robar sucursal bancaria", "Seguro que ni lo notan", "50xp","350$"));
-        return tasks;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
