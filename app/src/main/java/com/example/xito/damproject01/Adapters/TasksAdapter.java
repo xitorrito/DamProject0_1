@@ -2,27 +2,32 @@ package com.example.xito.damproject01.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.example.xito.damproject01.Player;
+import com.example.xito.damproject01.Models.Player;
 import com.example.xito.damproject01.ProgressBarAsyncTask;
 import com.example.xito.damproject01.R;
-import com.example.xito.damproject01.Tasks;
-import com.liulishuo.magicprogresswidget.MagicProgressBar;
+import com.example.xito.damproject01.Models.Tasks;
 
 import java.util.List;
 
@@ -41,6 +46,7 @@ public class TasksAdapter extends BaseAdapter  {
     private ListView listView;
     private ProgressBarAsyncTask asyncTask;
     public static boolean running=false;
+    private boolean success;
 
     public TasksAdapter(Context context, List<Tasks> tasks, Typeface font, SQLiteDatabase db, Activity activity) {
         this.context = context;
@@ -81,9 +87,12 @@ public class TasksAdapter extends BaseAdapter  {
             viewHolder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             viewHolder.taskName=(TextView)convertView.findViewById(R.id.task_name);
             viewHolder.taskDescription=(TextView)convertView.findViewById(R.id.task_description);
-            viewHolder.raskRewardMoney =(TextView)convertView.findViewById(R.id.task_reward_money);
+            viewHolder.taskRewardMoney =(TextView)convertView.findViewById(R.id.task_reward_money);
             viewHolder.taskRewardExp =(TextView)convertView.findViewById(R.id.task_reward_exp);
+            viewHolder.taskEnergy =(TextView)convertView.findViewById(R.id.textView_energy_listview);
+            viewHolder.taskDefenses =(TextView)convertView.findViewById(R.id.textViewDefenses);
             viewHolder.progressBar=(ProgressBar) convertView.findViewById(R.id.progressBar_task);
+            viewHolder.upgradeTask=(Button) convertView.findViewById(R.id.buttonUpgradeTask);
             //viewHolder.cuadroFoto=(ImageView) convertView.findViewById(R.id.painting);
 
 
@@ -95,50 +104,77 @@ public class TasksAdapter extends BaseAdapter  {
         viewHolder.taskName.setTypeface(font);
         viewHolder.taskDescription.setTypeface(font);
         viewHolder.taskRewardExp.setTypeface(font);
-        viewHolder.raskRewardMoney.setTypeface(font);
+        viewHolder.taskRewardMoney.setTypeface(font);
+        viewHolder.taskEnergy.setTypeface(font);
+        viewHolder.taskDefenses.setTypeface(font);
         //viewHolder.progressBar.setVisibility(View.GONE);
 
         task = tasks.get(position);
+        if(task.getTaskAntivirus()>player.getPlayerEfficacy()){
+            viewHolder.taskDefenses.setTextColor(ContextCompat.getColor(context,android.R.color.holo_red_light));
+        }else{
+            viewHolder.taskDefenses.setTextColor(ContextCompat.getColor(context,R.color.material_teal_600));
+        }
+        if(task.getTaskEnergy()>player.getPlayerEnergy())
+            viewHolder.taskEnergy.setTextColor(ContextCompat.getColor(context,android.R.color.holo_red_light));
+        else{
+            viewHolder.taskEnergy.setTextColor(ContextCompat.getColor(context,R.color.material_teal_600));
 
+        }
 
         viewHolder.taskName.setText(task.getTaskName());
         viewHolder.taskDescription.setText(task.getTaskDescription());
         viewHolder.taskRewardExp.setText(task.getTaskRewardExp()+"XP");
-        viewHolder.raskRewardMoney.setText(task.getTaskRewardMoney()+"$");
+        viewHolder.taskRewardMoney.setText(task.getTaskRewardMoney()+"$");
+        viewHolder.taskEnergy.setText(task.getTaskEnergy()+"");
+        viewHolder.taskDefenses.setText(task.getTaskAntivirus()+"");
         //viewHolder.cuadroFoto.setImageResource(cuadros.get(position).getPainting());
+
+        viewHolder.upgradeTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YoYo.with(Techniques.Pulse)
-                        .duration(200)
-                        .playOn(viewHolder.cardView);
                 task = tasks.get(position);
-                //Log.e("Nombre", task.getTaskName());
+                if(player.getPlayerEnergy()<task.getTaskEnergy()){
+                    YoYo.with(Techniques.Shake)
+                            .duration(700)
+                            .playOn(viewHolder.taskEnergy);
+                }else{
+                    YoYo.with(Techniques.Pulse)
+                            .duration(200)
+                            .playOn(viewHolder.cardView);
 
-                if(!running){
-                    asyncTask = new ProgressBarAsyncTask(context,viewHolder.progressBar, player, task);
-                    asyncTask.execute(100); //100 = 10 seconds
-                    running=true;
-                }
+                    playerLevel=player.getPlayerLevel();
 
+                    //Log.e("Nombre", task.getTaskName());
 
+                    if(!running){
+                        asyncTask = new ProgressBarAsyncTask(context,viewHolder.progressBar, player, task,activity);
+                        Log.e("time", task.getTaskTime()+"");
+                        //asyncTask.execute(task.getTaskTime()); //100 = 10 seconds
+                        asyncTask.execute(10); //TODO: CAMBIAR
+                        running=true;
+                    }
 
+                    asyncTask.setOnDataChangeListenerAsymlTask(new ProgressBarAsyncTask.OnDataChangeListenerAsyncTask() {
+                        @Override
+                        public void onDataChanged(boolean success) {
+                            if(success){
 
-//                double expForNextLevel = player.getExpForNextLevel();
-//
-//                if(player.getPlayerExp()>=expForNextLevel){
-//                    player.setPlayerLevel(playerLevel++); //Level up
-//                    player.setExpForNextLevel((int)expForNextLevel); //Experience for the next level
-//                    player.setPlayerExp(0); //Reset experience points
-//                }
-
-
-                if(mOnDataChangeListener!=null){
-                    mOnDataChangeListener.onDataChanged();
-                }
-
-                if(playerLevel!=player.getPlayerLevel()){
-                    player.showDialogNewLevel(activity);
+                            }else{
+                            }
+                            if(mOnDataChangeListener!=null){
+                                mOnDataChangeListener.onDataChanged();
+                            }
+                            showToastTaskFinished(success);
+                        }
+                    });
                 }
             }
         });
@@ -146,14 +182,45 @@ public class TasksAdapter extends BaseAdapter  {
         return convertView;
     }
 
+    private void showToastTaskFinished(boolean success) {
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        View layout = inflater.inflate(R.layout.toast,
+                (ViewGroup) activity.findViewById(R.id.toastLayout));
+
+        TextView textToast = (TextView) layout.findViewById(R.id.textToast);
+        ImageView imageToast = (ImageView)layout.findViewById(R.id.imageToast);
+
+        if(success) {
+            textToast.setText("¡Tarea completada con exito!");
+            imageToast.setImageDrawable(context.getResources().getDrawable(android.R.drawable.checkbox_on_background));
+        }else {
+            textToast.setText("Mision fracasada. El antivirus ha protegido tus ataques");
+        }
+        Toast toast = new Toast(context);
+        //toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+        YoYo.with(Techniques.FadeIn)
+                .duration(100)
+                .playOn(textToast);
+        YoYo.with(Techniques.FadeIn)
+                .duration(100)
+                .playOn(imageToast);
+    }
+
 
     static class ViewHolder{
         private CardView cardView;
         private TextView taskName;
         private TextView taskDescription;
-        private TextView raskRewardMoney;
+        private TextView taskRewardMoney;
         private TextView taskRewardExp;
         private ProgressBar progressBar;
+        private TextView taskEnergy;
+        private TextView taskDefenses;
+        private Button upgradeTask;
     }
 
 
@@ -163,53 +230,6 @@ public class TasksAdapter extends BaseAdapter  {
 
     public interface OnDataChangeListener{
         void onDataChanged();
-    }
-    class ProgressBarAsyncTask2 extends AsyncTask<Integer, Integer, Integer> {
-        private Context mContext;
-        private ProgressBar mProgressBar;
-        public ProgressBarAsyncTask2(Context context, ProgressBar progressBar){
-            mContext=context;
-            mProgressBar=progressBar;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.e("onpreexecute", "onPreExecute: ");
-
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            int i;
-            for (i=0; i <=100;i++){
-                //Modifico la UI
-                publishProgress(i); //SE VA A onProgressUpdate()
-                //Duermo 50 ms
-                SystemClock.sleep(params[0]); // El tiempo indicado al crear asynctask
-                //Compruebo si se ha cancelado
-                if (isCancelled()){
-                    break;
-                }
-            }
-            return i;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            mProgressBar.setProgress(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            Log.e("postexecute", "He acabado");
-            playerLevel=player.getPlayerLevel();
-            player.setPlayerMoney(player.getPlayerMoney()+task.getTaskRewardMoney());
-            player.setPlayerExp(player.getPlayerExp()+task.getTaskRewardExp());
-
-        }
     }
 
 

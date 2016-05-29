@@ -15,9 +15,9 @@ import com.example.xito.damproject01.Adapters.ViewPagerAdapter;
 import com.example.xito.damproject01.Fragments.Fragment1;
 import com.example.xito.damproject01.Fragments.Fragment2;
 import com.example.xito.damproject01.Fragments.Fragment3;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.xito.damproject01.Models.Item;
+import com.example.xito.damproject01.Models.Player;
+import com.example.xito.damproject01.Models.Tasks;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private Player player = new Player();
     private Tasks tasks = new Tasks();
+    private Item item = new Item();
 
 
     @Override
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
           //Create a new player in the bd
         tasks.getTasksFromDB(db); //Create a static list of the tasks in the Tasks class
         player.getPlayerFromDB(db); //Create a static player in the Player class
+        item.getItemsFromDB(db); //Create a static list of items in the Item class
+
         player=Player.player;
         Log.e("onCreate player level", player.getPlayerExp()+"");
     }
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         //Fragment1 fragment1 = new Fragment1();
         //Bundle b = new Bundle();
         //b.putSerializable("player", player);
@@ -110,10 +113,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         saveDataToDB(db);
-        Log.e("onStop", "jugador guardado");
-        Log.e("onstop player level", player.getPlayerExp()+"");
-
-
     }
 
     public void saveDataToDB(SQLiteDatabase db){
@@ -122,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
         contentValues.put("level",player.getPlayerLevel());
         contentValues.put("exp",player.getPlayerExp());
         contentValues.put("money",player.getPlayerMoney());
+        contentValues.put("energy",player.getPlayerEnergy());
+        contentValues.put("efficacy",player.getPlayerEfficacy());
         db.update("player",contentValues, "id="+player.getPlayerId(),null);
-        Log.e("guardado en bd", "jugador guardado");
+
     }
 
 }

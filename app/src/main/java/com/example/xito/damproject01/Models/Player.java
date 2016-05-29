@@ -1,15 +1,11 @@
-package com.example.xito.damproject01;
+package com.example.xito.damproject01.Models;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import java.io.Serializable;
 
@@ -21,7 +17,36 @@ public class Player implements Serializable {
     private int playerExp;
     private int playerMoney;
     public static Player player = new Player();
-    private int expForNextLevel=40;
+    private int expForNextLevel=60;
+    private int playerEnergy;
+
+    public int getPlayerEfficacy() {
+        return playerEfficacy;
+    }
+
+    public void setPlayerEfficacy(int playerEfficacy) {
+        this.playerEfficacy = playerEfficacy;
+    }
+
+    public int getPlayerEnergy() {
+        return playerEnergy;
+    }
+
+    public void setPlayerEnergy(int playerEnergy) {
+        this.playerEnergy = playerEnergy;
+    }
+
+    private int playerEfficacy;
+
+    public Player(int playerId,String playerName,int playerEfficacy, int playerEnergy, int playerMoney, int playerExp, int playerLevel) {
+        this.playerEfficacy = playerEfficacy;
+        this.playerEnergy = playerEnergy;
+        this.playerMoney = playerMoney;
+        this.playerExp = playerExp;
+        this.playerLevel = playerLevel;
+        this.playerName = playerName;
+        this.playerId = playerId;
+    }
 
     public Player(int playerId, String playerName, int playerLevel, int playerExp, int playerMoney) {
         this.playerId = playerId;
@@ -114,13 +139,16 @@ public class Player implements Serializable {
     }
 
     public void getPlayerFromDB(SQLiteDatabase db){
-        Cursor c = db.query("player", new String[]{"id","name", "level", "exp"}, null, null,null,null,null);
+        Cursor c = db.query("player", new String[]{"id","name", "level", "exp", "energy", "efficacy","money"}, null, null,null,null,null);
         if (c.moveToFirst()) {
             do {
                 player.setPlayerId(c.getInt(0));
                 player.setPlayerName(c.getString(1));
                 player.setPlayerLevel(c.getInt(2));
                 player.setPlayerExp(c.getInt(3));
+                player.setPlayerEnergy(c.getInt(4));
+                player.setPlayerEfficacy(c.getInt(5));
+                player.setPlayerMoney(c.getInt(6));
 
             } while (c.moveToNext());
         }
@@ -148,6 +176,9 @@ public class Player implements Serializable {
                     }
                 }).setCancelable(false)
                 .show();
+
+        //player.setPlayerEnergy(player.getPlayerEnergy()+1);
+        //player.setPlayerEfficacy(player.getPlayerEfficacy()+1);
     }
 
 }

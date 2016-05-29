@@ -1,7 +1,7 @@
 package com.example.xito.damproject01;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.xito.damproject01.Adapters.TasksAdapter;
+import com.example.xito.damproject01.Models.Player;
+import com.example.xito.damproject01.Models.Tasks;
 
 /**
  * Created by Xito on 22/05/2016.
@@ -18,20 +20,61 @@ public class ProgressBarAsyncTask extends AsyncTask<Integer, Integer, Integer> {
     private ProgressBar mProgressBar;
     private Player mPlayer;
     private Tasks mTask;
-    private boolean mRunning;
+    private Activity mActivity;
+    private int playerLevel;
+    private OnDataChangeListenerAsyncTask mOnDataChangeListener;
+    private boolean mRunning, success;
+    private int efficacy, antivirus, difference;
+    private double probability;
 
-    public ProgressBarAsyncTask(Context context, ProgressBar progressBar, Player player, Tasks task){
+    public ProgressBarAsyncTask(Context context, ProgressBar progressBar, Player player, Tasks task, Activity activity){
         mContext=context;
         mProgressBar=progressBar;
         mPlayer =player;
         mTask=task;
-
+        mActivity=activity;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         mProgressBar.setVisibility(View.VISIBLE);
+        efficacy = mPlayer.getPlayerEfficacy();
+        antivirus = mTask.getTaskAntivirus();
+        Log.e("efficacy", efficacy+"");
+        Log.e("antivirus", antivirus+"");
+        difference = efficacy - antivirus;
+        Log.e("diferencia", difference+"");
+        if(efficacy==antivirus){
+            probability=95;
+        }
+        if((difference)<0) {
+            if ((difference) == -1) {
+                probability = 35;
+            }
+            if ((difference) <= -2) {
+                probability = 20;
+            }
+        }else{
+            if (difference==1) {
+                probability=85;
+            }
+            if (difference>=2){
+                probability=100;
+            }
+        }
+
+        int number = (int)((Math.random()*100)+1);
+        Log.e("probability", probability+"");
+        Log.e("number", number+"");
+        if (number <= probability){
+            success=true;
+        }else{
+            success=false;
+        }
+        Log.e("probability", probability+"");
+        Log.e("success", success+"");
+
     }
 
     @Override
@@ -62,10 +105,31 @@ public class ProgressBarAsyncTask extends AsyncTask<Integer, Integer, Integer> {
         TasksAdapter.running=false;
         mProgressBar.setProgress(0);
         mProgressBar.setVisibility(View.INVISIBLE);
-        mPlayer.setPlayerMoney(mPlayer.getPlayerMoney()+mTask.getTaskRewardMoney());
-        mPlayer.setPlayerExp(mPlayer.getPlayerExp()+mTask.getTaskRewardExp());
+        playerLevel=mPlayer.getPlayerLevel();
+        mPlayer.setPlayerEnergy(mPlayer.getPlayerEnergy()-mTask.getTaskEnergy());
+        if(success){
+            mPlayer.setPlayerMoney(mPlayer.getPlayerMoney()+mTask.getTaskRewardMoney());
+            mPlayer.setPlayerExp(mPlayer.getPlayerExp()+mTask.getTaskRewardExp());
+            if(playerLevel!=mPlayer.getPlayerLevel()){
+                mPlayer.showDialogNewLevel(mActivity);
+            }
+        }else{
+            //Not success mission
+        }
 
 
+
+        if(mOnDataChangeListener!=null){
+            mOnDataChangeListener.onDataChanged(success);
+        }
+
+    }
+
+    public interface OnDataChangeListenerAsyncTask{
+        void onDataChanged(boolean success);
+    }
+    public void setOnDataChangeListenerAsymlTask(OnDataChangeListenerAsyncTask onDataChangeListener){
+        mOnDataChangeListener = onDataChangeListener;
     }
 
 

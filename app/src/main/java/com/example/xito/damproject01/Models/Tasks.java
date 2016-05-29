@@ -1,8 +1,7 @@
-package com.example.xito.damproject01;
+package com.example.xito.damproject01.Models;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +16,49 @@ public class Tasks {
     private int taskRewardMoney;
     private String taskDescription;
     private int taskMinLevel;
-    public static List<Tasks> tasks= new ArrayList<>();
+    private int taskEnergy;
+    private int taskAntivirus;
+    private int taskTime;
     private Cursor c;
+    public static List<Tasks> tasks= new ArrayList<>();
 
-
-    public Tasks(int taskId, String taskName,String taskDescription, int taskRewardExp, int taskRewardMoney, int taskMinLevel) {
+    public Tasks(int taskId, String taskName, int taskRewardExp, int taskRewardMoney, String taskDescription,
+                 int taskMinLevel, int taskEnergy, int taskAntivirus, int taskTime) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskRewardExp = taskRewardExp;
         this.taskRewardMoney = taskRewardMoney;
         this.taskDescription = taskDescription;
         this.taskMinLevel = taskMinLevel;
+        this.taskEnergy = taskEnergy;
+        this.taskAntivirus = taskAntivirus;
+        this.taskTime = taskTime;
     }
+
+    public int getTaskTime() {
+        return taskTime;
+    }
+
+    public void setTaskTime(int taskTime) {
+        this.taskTime = taskTime;
+    }
+
+    public int getTaskAntivirus() {
+        return taskAntivirus;
+    }
+
+    public void setTaskAntivirus(int taskAntivirus) {
+        this.taskAntivirus = taskAntivirus;
+    }
+
+    public int getTaskEnergy() {
+        return taskEnergy;
+    }
+
+    public void setTaskEnergy(int taskEnergy) {
+        this.taskEnergy = taskEnergy;
+    }
+
 
     public Tasks() {
 
@@ -71,15 +101,13 @@ public class Tasks {
         return taskRewardExp;
     }
 
-
     public int getTaskRewardMoney() {
         return taskRewardMoney;
     }
 
     public void getTasksFromDB(SQLiteDatabase db) {
         tasks.removeAll(tasks);
-        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel"}, null, null, null, null, null, null);
-        Log.e("insertTasks", "get tasks from bd");
+        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time"}, null, null, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 taskId = c.getInt(0);
@@ -88,8 +116,11 @@ public class Tasks {
                 taskRewardExp = c.getInt(3);
                 taskRewardMoney = c.getInt(4);
                 taskMinLevel = c.getInt(5);
+                taskAntivirus=c.getInt(6);
+                taskEnergy=c.getInt(7);
+                taskTime=c.getInt(8);
 
-                tasks.add(new Tasks(taskId, taskName, taskDescription, taskRewardExp, taskRewardMoney, taskMinLevel));
+                tasks.add(new Tasks(taskId,taskName,taskRewardExp,taskRewardMoney,taskDescription,taskMinLevel,taskEnergy,taskAntivirus,taskTime));
 
             } while (c.moveToNext());
         }

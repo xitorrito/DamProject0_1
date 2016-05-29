@@ -32,12 +32,16 @@ tools:context=".Fragments.Fragment3"
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hackear terminales"
+            android:text="Hackear moviles"
             android:id="@+id/hackDevices"
             android:layout_weight="0"
             android:layout_below="@+id/listView_tasks"
             android:layout_toRightOf="@+id/button"
             android:layout_toEndOf="@+id/button" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonTable"/>
 
     </LinearLayout>
 
@@ -45,9 +49,11 @@ tools:context=".Fragments.Fragment3"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:id="@+id/linearLayout4" >
+        android:layout_marginTop="2dp"
+        android:id="@+id/linearLayout4"
+        android:elevation="10dp"
+        android:background="@color/bright_foreground_material_dark"
+        android:gravity="center_vertical|center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -99,8 +105,7 @@ tools:context=".Fragments.Fragment3"
             android:layout_toRightOf="@+id/textView3"
             android:layout_toEndOf="@+id/textView3"
             android:layout_marginRight="15dp"
-            android:textColor="@color/material_grey_400"
-            android:layout_marginBottom="5dp"/>
+            android:textColor="@color/material_grey_400" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,7 +131,51 @@ tools:context=".Fragments.Fragment3"
             android:layout_alignTop="@+id/textView4"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/material_grey_400" />
+            android:textColor="@color/material_grey_400"
+            android:layout_marginRight="2dp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/bullseye"
+            android:layout_marginLeft="5dp"
+            android:padding="1dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_efficacy"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/material_grey_400"
+            android:layout_marginRight="7dp" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/imageView3"
+            android:src="@drawable/energy"
+            android:padding="1dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:id="@+id/textView_energy"
+            android:layout_alignTop="@+id/textView4"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/material_grey_400"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="6dp" />
+
     </LinearLayout>
 
 

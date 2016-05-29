@@ -6,11 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +17,11 @@ import android.widget.TextView;
 
 import com.example.xito.damproject01.DBManager;
 import com.example.xito.damproject01.HackDevices;
-import com.example.xito.damproject01.MainActivity;
-import com.example.xito.damproject01.Player;
+import com.example.xito.damproject01.HackingDevice;
+import com.example.xito.damproject01.Models.Player;
+import com.example.xito.damproject01.ProgressBarAsyncTask;
 import com.example.xito.damproject01.R;
-import com.example.xito.damproject01.Tasks;
+import com.example.xito.damproject01.Models.Tasks;
 import com.example.xito.damproject01.Adapters.TasksAdapter;
 
 import java.util.ArrayList;
@@ -55,7 +53,10 @@ public class Fragment3 extends Fragment {
     private TextView moneyText;
     private TextView money;
     private TextView title;
+    private TextView energy;
+    private TextView efficacy;
     private int playerLevel;
+    private ProgressBarAsyncTask progressBarAsyncTask;
 
     public Fragment3() {
         // Required empty public constructor
@@ -64,7 +65,6 @@ public class Fragment3 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
         tasks=Tasks.tasks;
@@ -76,17 +76,14 @@ public class Fragment3 extends Fragment {
             @Override
             public void onDataChanged() {
                 updateTextViews();
-                Log.e("level ondatachanged", player.getPlayerLevel()+"");
-                Log.e("tasks size", tasksUnlocked.size()+"");
+                customAdapter.notifyDataSetChanged();
                 if(tasksUnlocked.size()<=tasks.size()){
                     if(tasks.get(tasksUnlocked.size()-1).getTaskMinLevel()==player.getPlayerLevel()){
-                        tasksUnlocked=getUnlockedTasks(playerLevel);
-                        tasksUnlocked.add(getNewUnlockedTask(playerLevel));
-                        customAdapter.notifyDataSetChanged();
+                        tasksUnlocked=getUnlockedTasks(player.getPlayerLevel());
+                        tasksUnlocked.add(getNewUnlockedTask());
+                        customAdapter.notifyDataSetChanged(); //no se desbloquean nuevas
                     }
                 }
-
-
             }
 
         });
@@ -94,7 +91,7 @@ public class Fragment3 extends Fragment {
     }
 
 
-    private Tasks getNewUnlockedTask(int playerLevel) {
+    private Tasks getNewUnlockedTask() {
         return tasks.get(tasksUnlocked.size()-1);
     }
 
@@ -106,6 +103,8 @@ public class Fragment3 extends Fragment {
         level.setText(player.getPlayerLevel()+"");
         exp.setText(player.getPlayerExp()+"");
         money.setText(player.getPlayerMoney()+"");
+        efficacy.setText(player.getPlayerEfficacy()+"");
+        energy.setText(player.getPlayerEnergy()+"");
 
     }
 
@@ -115,6 +114,7 @@ public class Fragment3 extends Fragment {
                 tasksUnlocked.add(tasks.get(i));
             }
         }
+        //gestion de recursos con fruit ninja
 
         return tasksUnlocked;
     }
@@ -139,8 +139,10 @@ public class Fragment3 extends Fragment {
         exp=(TextView)getView().findViewById(R.id.textView_xp);
         moneyText =(TextView)getView().findViewById(R.id.textView_moneyText);
         money =(TextView)getView().findViewById(R.id.textView_MoneyNumber);
+        energy =(TextView)getView().findViewById(R.id.textView_energy);
+        efficacy =(TextView)getView().findViewById(R.id.textView_efficacy);
 
-        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
+        font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
 
         levelText.setTypeface(font);
         level.setTypeface(font);
@@ -150,10 +152,21 @@ public class Fragment3 extends Fragment {
         money.setTypeface(font);
 
         Button button = (Button)getView().findViewById(R.id.hackDevices);
+        Button button2 = (Button)getView().findViewById(R.id.buttonTable);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HackDevices.class);
+                intent.putExtra("player", player);
+                startActivity(intent);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HackingDevice.class);
+               // intent.putExtra("player", player);
                 startActivity(intent);
             }
         });
@@ -172,5 +185,16 @@ public class Fragment3 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment3, container, false);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (this.isVisible()) {
+            updateTextViews();
+            customAdapter.notifyDataSetChanged();
+            if (!isVisibleToUser) {
+            }
+        }
     }
 }

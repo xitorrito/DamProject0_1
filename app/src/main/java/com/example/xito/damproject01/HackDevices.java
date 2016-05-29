@@ -3,32 +3,59 @@ package com.example.xito.damproject01;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.xito.damproject01.Adapters.BluetoothDevicesAdapter;
+import com.example.xito.damproject01.Models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HackDevices extends AppCompatActivity {
     private List<BluetoothDevice> devices;
-    private ArrayAdapter arrayAdapter;
+    private BluetoothDevicesAdapter adapter;
+    private BluetoothAdapter bluetoothAdapter;
+    private SQLiteDatabase db;
+    private DBManager dbManager;
+    private Typeface font;
+    private CardView cardView;
+    private ListView listView;
+    private Player player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hack_devices);
+
+        dbManager = DBManager.getInstance(this);
+        db = dbManager.getWritableDatabase();
+        player=(Player)getIntent().getSerializableExtra("player");
         devices= new ArrayList<>();
+        listView = (ListView)findViewById(R.id.listView);
+        font = Typeface.createFromAsset(getAssets(), "fonts/LipbyChonk.ttf");
 
-        ListView listView = (ListView)findViewById(R.id.listView);
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,devices);
-        listView.setAdapter(arrayAdapter);
-
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        adapter= new BluetoothDevicesAdapter(getApplicationContext(),devices,font, db);
+        listView.setAdapter(adapter);
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            //no bluetooth
+        } else {
+            if (!bluetoothAdapter.isEnabled()) {
+                cardView = (CardView)findViewById(R.id.card_view_bluetooth_disabled);
+                cardView.setVisibility(View.VISIBLE);
+            }
+        }
         IntentFilter filter = new IntentFilter();
 
         filter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -36,7 +63,7 @@ public class HackDevices extends AppCompatActivity {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
         registerReceiver(mReceiver, filter);
-        adapter.startDiscovery();
+        bluetoothAdapter.startDiscovery();
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -49,10 +76,10 @@ public class HackDevices extends AppCompatActivity {
                 //discovery finishes, dismis progress dialog
             } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 //bluetooth device found
-                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
                 devices.add(device);
-                arrayAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
 
                 Toast.makeText(HackDevices.this, "Found device " + device.getName(), Toast.LENGTH_SHORT).show();
             }
@@ -61,8 +88,41 @@ public class HackDevices extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(mReceiver);
+       // unregisterReceiver(mReceiver);
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(mReceiver);
+        }catch (IllegalArgumentException e){
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!db.isOpen()) {
+            db = dbManager.getWritableDatabase();
+
+        }else{
+            saveDataToDB(db);
+            Log.e("onresume player level", player.getPlayerExp()+"");
+        }
+    }
+    public void saveDataToDB(SQLiteDatabase db){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name",player.getPlayerName());
+        contentValues.put("level",player.getPlayerLevel());
+        contentValues.put("exp",player.getPlayerExp());
+        contentValues.put("money",player.getPlayerMoney());
+        db.update("player",contentValues, "id="+player.getPlayerId(),null);
+        Log.e("guardado en bd", "jugador guardado");
     }
 }
