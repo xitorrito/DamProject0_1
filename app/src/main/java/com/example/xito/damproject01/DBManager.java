@@ -14,9 +14,10 @@ public class DBManager extends SQLiteOpenHelper {
  
     //Sentencia SQL para crear las tablas
     String createTableJugador = "CREATE TABLE IF NOT EXISTS Player (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, level" +
-            " INTEGER, exp INTEGER, money INTEGER, energy INTEGER, efficacy INTEFER)";
+            " INTEGER, exp INTEGER, money INTEGER, energy INTEGER, efficacy INTEGER)";
     String createTableTareas = "CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, " +
-            "description TEXT, minLevel INTEGER, rewardExp INTEGER,rewardMoney INTEGER, time INTEGER, energy INTEGER, antivirus INTEGER)";
+            "description TEXT, minLevel INTEGER, rewardExp INTEGER,rewardMoney INTEGER, time INTEGER, energy INTEGER, antivirus INTEGER, taskLevel INTEGER," +
+            " timesCompleted INTEGER, timesForLevelling INTEGER)";
     String createTableTienda = "CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " item TEXT, description TEXT, priceMoney INTEGER, upgradeEnergy INTEGER, upgradeEfficacy INTEGER)";
 
@@ -151,6 +152,9 @@ public class DBManager extends SQLiteOpenHelper {
             contentValues.put("energy",taskEnergy.get(i));
             contentValues.put("antivirus",taskAntivirus.get(i));
             contentValues.put("time",taskTime.get(i));
+            contentValues.put("taskLevel",1);
+            contentValues.put("timesCompleted",0);
+            contentValues.put("timesForLevelling",15);
             db.insert("tasks",null, contentValues);
         }
 

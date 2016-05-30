@@ -19,11 +19,14 @@ public class Tasks {
     private int taskEnergy;
     private int taskAntivirus;
     private int taskTime;
+    private int taskLevel;
     private Cursor c;
     public static List<Tasks> tasks= new ArrayList<>();
+    private int taskTimesCompleted;
+    private int taskTimesForLevelling;
 
     public Tasks(int taskId, String taskName, int taskRewardExp, int taskRewardMoney, String taskDescription,
-                 int taskMinLevel, int taskEnergy, int taskAntivirus, int taskTime) {
+                 int taskMinLevel, int taskEnergy, int taskAntivirus, int taskTime, int taskLevel, int taskTimesCompleted, int taskTimesForLevelling) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskRewardExp = taskRewardExp;
@@ -33,6 +36,41 @@ public class Tasks {
         this.taskEnergy = taskEnergy;
         this.taskAntivirus = taskAntivirus;
         this.taskTime = taskTime;
+        this.taskLevel=taskLevel;
+        this.taskTimesCompleted=taskTimesCompleted;
+        this.taskTimesForLevelling=taskTimesForLevelling;
+    }
+
+    public int getTaskTimesCompleted() {
+        return taskTimesCompleted;
+    }
+
+    public void setTaskTimesCompleted(int taskTimesCompleted) {
+        this.taskTimesCompleted = taskTimesCompleted;
+    }
+
+    public int getTaskLevel() {
+        return taskLevel;
+    }
+
+    public void setTaskLevel(int taskLevel) {
+        this.taskLevel = taskLevel;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public int getTaskTimesForLevelling() {
+        return taskTimesForLevelling;
+    }
+
+    public void setTaskTimesForLevelling(int taskTimesForLevelling) {
+        this.taskTimesForLevelling = taskTimesForLevelling;
     }
 
     public int getTaskTime() {
@@ -107,7 +145,7 @@ public class Tasks {
 
     public void getTasksFromDB(SQLiteDatabase db) {
         tasks.removeAll(tasks);
-        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time"}, null, null, null, null, null, null);
+        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time","taskLevel","timesCompleted","timesForLevelling"}, null, null, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 taskId = c.getInt(0);
@@ -119,8 +157,11 @@ public class Tasks {
                 taskAntivirus=c.getInt(6);
                 taskEnergy=c.getInt(7);
                 taskTime=c.getInt(8);
+                taskLevel=c.getInt(9);
+                taskTimesCompleted=c.getInt(10);
+                taskTimesForLevelling=c.getInt(11);
 
-                tasks.add(new Tasks(taskId,taskName,taskRewardExp,taskRewardMoney,taskDescription,taskMinLevel,taskEnergy,taskAntivirus,taskTime));
+                tasks.add(new Tasks(taskId,taskName,taskRewardExp,taskRewardMoney,taskDescription,taskMinLevel,taskEnergy,taskAntivirus,taskTime,taskLevel,taskTimesCompleted,taskTimesForLevelling));
 
             } while (c.moveToNext());
         }

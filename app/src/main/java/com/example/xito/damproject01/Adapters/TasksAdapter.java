@@ -1,6 +1,7 @@
 package com.example.xito.damproject01.Adapters;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
@@ -92,6 +93,7 @@ public class TasksAdapter extends BaseAdapter  {
             viewHolder.taskEnergy =(TextView)convertView.findViewById(R.id.textView_energy_listview);
             viewHolder.taskDefenses =(TextView)convertView.findViewById(R.id.textViewDefenses);
             viewHolder.progressBar=(ProgressBar) convertView.findViewById(R.id.progressBar_task);
+            viewHolder.progressBarTaskLevel=(ProgressBar) convertView.findViewById(R.id.progressBar_taskLevel);
             viewHolder.upgradeTask=(Button) convertView.findViewById(R.id.buttonUpgradeTask);
             //viewHolder.cuadroFoto=(ImageView) convertView.findViewById(R.id.painting);
 
@@ -122,18 +124,36 @@ public class TasksAdapter extends BaseAdapter  {
 
         }
 
+
+        viewHolder.progressBarTaskLevel.setMax(task.getTaskTimesForLevelling());
+        viewHolder.progressBarTaskLevel.setProgress(task.getTaskTimesCompleted());
+        if(viewHolder.progressBarTaskLevel.getProgress()==viewHolder.progressBarTaskLevel.getMax()){
+            viewHolder.upgradeTask.setEnabled(false);
+
+        }else{
+            viewHolder.upgradeTask.setEnabled(true);
+        }
+
         viewHolder.taskName.setText(task.getTaskName());
         viewHolder.taskDescription.setText(task.getTaskDescription());
-        viewHolder.taskRewardExp.setText(task.getTaskRewardExp()+"XP");
-        viewHolder.taskRewardMoney.setText(task.getTaskRewardMoney()+"$");
-        viewHolder.taskEnergy.setText(task.getTaskEnergy()+"");
+        viewHolder.taskRewardExp.setText("+"+task.getTaskRewardExp()+"XP");
+        viewHolder.taskRewardMoney.setText("+"+task.getTaskRewardMoney()+"$");
+        viewHolder.taskEnergy.setText("-"+task.getTaskEnergy()+"");
         viewHolder.taskDefenses.setText(task.getTaskAntivirus()+"");
+        viewHolder.upgradeTask.setEnabled(false);
         //viewHolder.cuadroFoto.setImageResource(cuadros.get(position).getPainting());
 
         viewHolder.upgradeTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                task=tasks.get(position);
+                task.setTaskLevel(task.getTaskLevel()+1);
+                task.setTaskTimesForLevelling(task.getTaskTimesForLevelling()+5);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("taskLevel",task.getTaskLevel());
+                contentValues.put("timesForLevelling",task.getTaskTimesForLevelling());
+                db.update("tasks",contentValues, "id="+task.getTaskId(),null);
+                notifyDataSetChanged();
             }
         });
 
@@ -152,8 +172,6 @@ public class TasksAdapter extends BaseAdapter  {
 
                     playerLevel=player.getPlayerLevel();
 
-                    //Log.e("Nombre", task.getTaskName());
-
                     if(!running){
                         asyncTask = new ProgressBarAsyncTask(context,viewHolder.progressBar, player, task,activity);
                         Log.e("time", task.getTaskTime()+"");
@@ -166,7 +184,10 @@ public class TasksAdapter extends BaseAdapter  {
                         @Override
                         public void onDataChanged(boolean success) {
                             if(success){
-
+                                if(task.getTaskTimesForLevelling()!=task.getTaskTimesCompleted())
+                                    task.setTaskTimesCompleted(task.getTaskTimesCompleted()+1);
+                                Log.e("task times",task.getTaskTimesCompleted()+"");
+                                Log.e("times for compl",task.getTaskTimesForLevelling()+"");
                             }else{
                             }
                             if(mOnDataChangeListener!=null){
@@ -176,6 +197,7 @@ public class TasksAdapter extends BaseAdapter  {
                         }
                     });
                 }
+                notifyDataSetChanged();
             }
         });
 
@@ -218,6 +240,7 @@ public class TasksAdapter extends BaseAdapter  {
         private TextView taskRewardMoney;
         private TextView taskRewardExp;
         private ProgressBar progressBar;
+        private ProgressBar progressBarTaskLevel;
         private TextView taskEnergy;
         private TextView taskDefenses;
         private Button upgradeTask;

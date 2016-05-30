@@ -71,6 +71,9 @@ public class Fragment3 extends Fragment {
         player = Player.player;
         playerLevel= player.getPlayerLevel();
         tasksUnlocked=getUnlockedTasks(playerLevel);
+        dbManager=DBManager.getInstance(getContext());
+        db=dbManager.getWritableDatabase();
+
         customAdapter= new TasksAdapter(getContext(), tasksUnlocked, font, db, getActivity());
         customAdapter.setOnDataChangeListener(new TasksAdapter.OnDataChangeListener() {
             @Override
@@ -87,6 +90,8 @@ public class Fragment3 extends Fragment {
             }
 
         });
+
+
 
     }
 
@@ -195,6 +200,14 @@ public class Fragment3 extends Fragment {
             customAdapter.notifyDataSetChanged();
             if (!isVisibleToUser) {
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!db.isOpen()) {
+            db = dbManager.getWritableDatabase();
         }
     }
 }

@@ -82,14 +82,14 @@ public class MarketAdapter extends BaseAdapter  {
             viewHolder.itemPriceMoney =(TextView)convertView.findViewById(R.id.itemPrice);
             viewHolder.itemUpgradeEfficacy =(TextView)convertView.findViewById(R.id.upgradeEfficacy);
             viewHolder.itemUpgradeEnergy =(TextView)convertView.findViewById(R.id.upgradeEnergy);
-            if(item.getItemUpgradeEfficacy()==0) {
+           /* if(item.getItemUpgradeEfficacy()==0) {
                 if(item.getItemUpgradeEnergy()!=0)
                     viewHolder.itemUpgradeEnergy.setVisibility(View.VISIBLE);
             }else{
 
                 viewHolder.itemUpgradeEfficacy.setVisibility(View.VISIBLE);
 
-            }
+            }*/
 
             convertView.setTag(viewHolder);
         }else{
