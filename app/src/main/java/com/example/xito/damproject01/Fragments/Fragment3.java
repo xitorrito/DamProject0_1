@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.xito.damproject01.DBManager;
 import com.example.xito.damproject01.HackDevices;
 import com.example.xito.damproject01.HackingDevice;
+import com.example.xito.damproject01.MapsActivity;
 import com.example.xito.damproject01.Models.Player;
 import com.example.xito.damproject01.ProgressBarAsyncTask;
 import com.example.xito.damproject01.R;
@@ -170,7 +171,7 @@ public class Fragment3 extends Fragment {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HackingDevice.class);
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
                // intent.putExtra("player", player);
                 startActivity(intent);
             }

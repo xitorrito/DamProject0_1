@@ -9,4 +9,5 @@
     <string name="descriptionTaskText">Descripción</string>
     <string name="shopText">Tienda</string>
     <string name="rewards">Recompensas: </string>
+    <string name="title_activity_maps">Map</string>
 </resources>

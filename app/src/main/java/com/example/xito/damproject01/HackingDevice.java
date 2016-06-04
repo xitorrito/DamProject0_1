@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.xito.damproject01.Adapters.NumberAdapter;
+import com.example.xito.damproject01.Models.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +79,7 @@ public class HackingDevice extends Activity {
 
 
         table= (GridView)findViewById(R.id.table);
+        table.setVisibility(View.INVISIBLE);
         text1= (TextView) findViewById(R.id.textTable1);
         text2= (TextView) findViewById(R.id.textTable2);
         textCountDown= (TextView) findViewById(R.id.textCountDown);
@@ -110,6 +112,10 @@ public class HackingDevice extends Activity {
                 text2.setVisibility(View.VISIBLE);
                 text1.setVisibility(View.VISIBLE);
                 text2.setText(String.valueOf(randomNumbers.get(0)));
+                table.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeIn)
+                        .duration(50)
+                        .playOn(table);
                 progressBar.setVisibility(View.VISIBLE);
                 YoYo.with(Techniques.FadeInUp)
                         .duration(100)
@@ -127,6 +133,7 @@ public class HackingDevice extends Activity {
                                     .playOn(text2);
                         }else{
                             showDialogGameCompleted();
+                            asynktaskBar.cancel(true);
                             //Dialogo y mapa
                         }
                     }
@@ -268,7 +275,7 @@ public class HackingDevice extends Activity {
     }
 
     private void showDialogGameOver(){
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HackingDevice.this);
         alertDialogBuilder.setMessage("¡Intenta ser mas rapido la proxima vez!")
                 .setTitle("Hackeo fallido")
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -291,13 +298,16 @@ public class HackingDevice extends Activity {
     }
 
     private void showDialogGameCompleted(){
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Ya tienes todos los datos de la victima")
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HackingDevice.this);
+        alertDialogBuilder.setMessage("Ya tienes todos los datos de la victima\n\n+100 XP  +100$")
                 .setTitle("Hackeo completado")
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        Player.player.setPlayerExp(Player.player.getPlayerExp()+100);
+                        Player.player.setPlayerMoney(Player.player.getPlayerMoney()+100);
+
                     }
                 })
                 .setCancelable(false)

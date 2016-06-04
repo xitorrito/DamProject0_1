@@ -38,14 +38,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("prefs", 0);
 
         if (prefs.getBoolean("firstTime",true)) { //The app is launched for the first time
-            //the app is being launched for first time, do something
-            Log.e("first time", "first time");
 
-
-            // record the fact that the app has been started at least once
             prefs.edit().putBoolean("firstTime", false).commit();
         }else{
-            Log.e("second time", "second time");
+
         }
 
         dbManager = DBManager.getInstance(this);
@@ -62,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         item.getItemsFromDB(db); //Create a static list of items in the Item class
 
         player=Player.player;
-        Log.e("onCreate player level", player.getPlayerExp()+"");
     }
 
     private void setTabMenu() {
@@ -105,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             saveDataToDB(db);
-            Log.e("onresume player level", player.getPlayerExp()+"");
         }
     }
 

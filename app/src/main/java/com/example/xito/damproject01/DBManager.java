@@ -20,6 +20,8 @@ public class DBManager extends SQLiteOpenHelper {
             " timesCompleted INTEGER, timesForLevelling INTEGER)";
     String createTableTienda = "CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " item TEXT, description TEXT, priceMoney INTEGER, upgradeEnergy INTEGER, upgradeEfficacy INTEGER)";
+    String createTableWifiHacks = "CREATE TABLE IF NOT EXISTS WifiHacks (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " networkName TEXT, macAddress TEXT, latitude REAL, longitude REAL)";
 
     private static DBManager uniqueInstance;
     
