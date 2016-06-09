@@ -32,7 +32,7 @@ tools:context=".Fragments.Fragment3"
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hackear moviles"
+            android:text="Hackear redes wifi"
             android:id="@+id/hackDevices"
             android:layout_weight="0"
             android:layout_below="@+id/listView_tasks"
@@ -41,7 +41,8 @@ tools:context=".Fragments.Fragment3"
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonTable"/>
+            android:id="@+id/buttonMap"
+            android:text="Ver mapa" />
 
     </LinearLayout>
 

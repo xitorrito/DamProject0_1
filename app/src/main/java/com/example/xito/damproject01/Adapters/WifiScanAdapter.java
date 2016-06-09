@@ -1,27 +1,27 @@
 package com.example.xito.damproject01.Adapters;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.example.xito.damproject01.Models.Player;
-import com.example.xito.damproject01.ProgressBarAsyncTask;
+import com.example.xito.damproject01.HackingDevice;
+import com.example.xito.damproject01.Models.Networks;
 import com.example.xito.damproject01.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WifiScanAdapter extends BaseAdapter  {
@@ -30,14 +30,11 @@ public class WifiScanAdapter extends BaseAdapter  {
     private List<ScanResult> networks;
     private Typeface font;
     private SQLiteDatabase db;
-    private int taskMinLevel;
-    private Player player = Player.player;
     private int playerLevel;
     private OnDataChangeListener mOnDataChangeListener;
     private Activity activity;
-    private ListView listView;
-    private ProgressBarAsyncTask asyncTask;
-    public static boolean running=false;
+    private ArrayList<Networks> networksFromDB;
+
 
     public WifiScanAdapter(Context context, List<ScanResult> networks, Typeface font, SQLiteDatabase db, Activity activity) {
         this.context = context;
@@ -45,14 +42,6 @@ public class WifiScanAdapter extends BaseAdapter  {
         this.font=font;
         this.db=db;
         this.activity=activity;
-
-    }
-
-    public WifiScanAdapter(Context context, List<ScanResult> networks, Typeface font, SQLiteDatabase db) {
-        this.context = context;
-        this.networks=networks;
-        this.font=font;
-        this.db=db;
     }
 
     @Override
@@ -76,12 +65,13 @@ public class WifiScanAdapter extends BaseAdapter  {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        playerLevel=player.getPlayerLevel();
+        networksFromDB = Networks.getNetworksFromDB(db);
+
         final ViewHolder viewHolder;
         if(convertView == null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView=inflater.inflate(R.layout.item_bluetooth_devices,null);
+            convertView=inflater.inflate(R.layout.item_wifi_network,null);
             viewHolder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             viewHolder.deviceName =(TextView)convertView.findViewById(R.id.device_name);
             viewHolder.devideAddress =(TextView)convertView.findViewById(R.id.device_address);
@@ -96,38 +86,41 @@ public class WifiScanAdapter extends BaseAdapter  {
 
         viewHolder.deviceName.setText(networks.get(position).SSID);
         viewHolder.devideAddress.setText(networks.get(position).BSSID);
-
+/*
+        for (int i = 0; i <networksFromDB.size() ; i++) {
+            if (viewHolder.devideAddress.getText().toString().equals(networksFromDB.get(i).getMacAddress())){
+                viewHolder.cardView.setCardBackgroundColor(R.color.colorPrimary);
+                viewHolder.deviceName.setTextColor(Color.WHITE);
+                viewHolder.devideAddress.setTextColor(Color.WHITE);
+            }
+        }
+*/
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                YoYo.with(Techniques.Pulse)
-                        .duration(200)
-                        .playOn(viewHolder.cardView);
-                Toast.makeText(context, networks.get(position).toString()+"", Toast.LENGTH_SHORT).show();
-
-
-
-                /*if(!running){
-                    asyncTask = new ProgressBarAsyncTask(context,viewHolder.progressBar, player, task);
-                    asyncTask.execute(100); //100 = 10 seconds
-                    running=true;
-                }*/
-
-//                double expForNextLevel = player.getExpForNextLevel();
-//
-//                if(player.getPlayerExp()>=expForNextLevel){
-//                    player.setPlayerLevel(playerLevel++); //Level up
-//                    player.setExpForNextLevel((int)expForNextLevel); //Experience for the next level
-//                    player.setPlayerExp(0); //Reset experience points
-//                }
-
-
-                if(mOnDataChangeListener!=null){
-                    mOnDataChangeListener.onDataChanged();
+                boolean networkAttacked=false;
+                if(networksFromDB.size()>0){
+                    for (int i = 0; i <networksFromDB.size() ; i++) {
+                        if (viewHolder.devideAddress.getText().toString().equals(networksFromDB.get(i).getMacAddress())) {
+                            networkAttacked=true;
+                        }
+                    }
                 }
 
-                if(playerLevel!=player.getPlayerLevel()){
-                    player.showDialogNewLevel(activity);
+                if(!networkAttacked){
+                    YoYo.with(Techniques.Pulse)
+                            .duration(200)
+                            .playOn(viewHolder.cardView);
+                    //Toast.makeText(context, networks.get(position).toString()+"", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(activity, HackingDevice.class);
+                    intent.putExtra("network",networks.get(position));
+                    activity.startActivity(intent);
+                    activity.finish();
+                    if(mOnDataChangeListener!=null){
+                        mOnDataChangeListener.onDataChanged();
+                    }
+                }else{
+                    Toast.makeText(context, "Ya has hackeado esta red", Toast.LENGTH_SHORT).show();
                 }
             }
         });

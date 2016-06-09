@@ -3,6 +3,7 @@ package com.example.xito.damproject01.Models;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +146,7 @@ public class Tasks {
 
     public void getTasksFromDB(SQLiteDatabase db) {
         tasks.removeAll(tasks);
-        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time","taskLevel","timesCompleted","timesForLevelling"}, null, null, null, null, null, null);
+        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time", "taskLevel", "timesCompleted", "timesForLevelling"}, null, null, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 taskId = c.getInt(0);
@@ -154,17 +155,41 @@ public class Tasks {
                 taskRewardExp = c.getInt(3);
                 taskRewardMoney = c.getInt(4);
                 taskMinLevel = c.getInt(5);
-                taskAntivirus=c.getInt(6);
-                taskEnergy=c.getInt(7);
-                taskTime=c.getInt(8);
-                taskLevel=c.getInt(9);
-                taskTimesCompleted=c.getInt(10);
-                taskTimesForLevelling=c.getInt(11);
+                taskAntivirus = c.getInt(6);
+                taskEnergy = c.getInt(7);
+                taskTime = c.getInt(8);
+                taskLevel = c.getInt(9);
+                taskTimesCompleted = c.getInt(10);
+                taskTimesForLevelling = c.getInt(11);
 
-                tasks.add(new Tasks(taskId,taskName,taskRewardExp,taskRewardMoney,taskDescription,taskMinLevel,taskEnergy,taskAntivirus,taskTime,taskLevel,taskTimesCompleted,taskTimesForLevelling));
+                tasks.add(new Tasks(taskId, taskName, taskRewardExp, taskRewardMoney, taskDescription, taskMinLevel, taskEnergy, taskAntivirus, taskTime, taskLevel, taskTimesCompleted, taskTimesForLevelling));
 
             } while (c.moveToNext());
         }
+    }
+    public List<Tasks> getTasksFromDBToArray(SQLiteDatabase db) {
+        tasks.removeAll(tasks);
+        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time", "taskLevel", "timesCompleted", "timesForLevelling"}, null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                taskId = c.getInt(0);
+                taskName = c.getString(1);
+                taskDescription = c.getString(2);
+                taskRewardExp = c.getInt(3);
+                taskRewardMoney = c.getInt(4);
+                taskMinLevel = c.getInt(5);
+                taskAntivirus = c.getInt(6);
+                taskEnergy = c.getInt(7);
+                taskTime = c.getInt(8);
+                taskLevel = c.getInt(9);
+                taskTimesCompleted = c.getInt(10);
+                taskTimesForLevelling = c.getInt(11);
+
+                tasks.add(new Tasks(taskId, taskName, taskRewardExp, taskRewardMoney, taskDescription, taskMinLevel, taskEnergy, taskAntivirus, taskTime, taskLevel, taskTimesCompleted, taskTimesForLevelling));
+
+            } while (c.moveToNext());
+        }
+        return tasks;
     }
 
 }

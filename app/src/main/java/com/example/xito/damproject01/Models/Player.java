@@ -164,7 +164,7 @@ public class Player implements Serializable {
         player = new Player(1,"Hacker",1,0,0);
     }
 
-    public void showDialogNewLevel(Activity activity){
+    public static void showDialogNewLevel(Activity activity){
 
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setMessage("Ahora estás en el nivel "+player.getPlayerLevel())

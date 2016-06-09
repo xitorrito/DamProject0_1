@@ -1,10 +1,13 @@
 package com.example.xito.damproject01.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xito.damproject01.DBManager;
 import com.example.xito.damproject01.HackDevices;
@@ -38,10 +42,19 @@ public class Fragment3 extends Fragment {
     private List<Tasks> tasksUnlocked = new ArrayList<>();
     private int taskId;
     private String taskName;
+    private int taskRewardExp;
+    private int taskRewardMoney;
     private String taskDescription;
+    private int taskMinLevel;
+    private int taskEnergy;
+    private int taskAntivirus;
+    private int taskTime;
+    private int taskLevel;
     private int rewardExp;
     private int rewardMoney;
     private int minLevel;
+    private int taskTimesCompleted;
+    private int taskTimesForLevelling;
     private Cursor c;
     private Typeface font;
     private TasksAdapter customAdapter;
@@ -58,6 +71,7 @@ public class Fragment3 extends Fragment {
     private TextView efficacy;
     private int playerLevel;
     private ProgressBarAsyncTask progressBarAsyncTask;
+    private Tasks task;
 
     public Fragment3() {
         // Required empty public constructor
@@ -67,33 +81,61 @@ public class Fragment3 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+      //  tasks=Tasks.tasks;
         font = Typeface.createFromAsset(getContext().getAssets(), "fonts/LipbyChonk.ttf");
-        tasks=Tasks.tasks;
         player = Player.player;
         playerLevel= player.getPlayerLevel();
         tasksUnlocked=getUnlockedTasks(playerLevel);
         dbManager=DBManager.getInstance(getContext());
         db=dbManager.getWritableDatabase();
+        //task=new Tasks();
 
-        customAdapter= new TasksAdapter(getContext(), tasksUnlocked, font, db, getActivity());
+       // tasks=task.getTasksFromDBToArray(db);
+        getTasksFromDB(db);
+
+        customAdapter= new TasksAdapter(getContext(), tasks, font, db, getActivity());
         customAdapter.setOnDataChangeListener(new TasksAdapter.OnDataChangeListener() {
             @Override
-            public void onDataChanged() {
+            public void onDataChanged(int level) {
                 updateTextViews();
-                customAdapter.notifyDataSetChanged();
-                if(tasksUnlocked.size()<=tasks.size()){
+                //customAdapter.notifyDataSetChanged();
+              /*  if(tasksUnlocked.size()<=tasks.size()){
                     if(tasks.get(tasksUnlocked.size()-1).getTaskMinLevel()==player.getPlayerLevel()){
-                        tasksUnlocked=getUnlockedTasks(player.getPlayerLevel());
+                        tasksUnlocked=getUnlockedTasks(playerLevel);
                         tasksUnlocked.add(getNewUnlockedTask());
-                        customAdapter.notifyDataSetChanged(); //no se desbloquean nuevas
+                        customAdapter.notifyDataSetChanged();
                     }
-                }
+                }*/
             }
 
         });
 
 
 
+    }
+
+    private void getTasksFromDB(SQLiteDatabase db) {
+        tasks.removeAll(tasks);
+        c = db.query("tasks", new String[]{"id", "task", "description", "rewardExp", "rewardMoney", "minLevel", "antivirus", "energy", "time", "taskLevel", "timesCompleted", "timesForLevelling"}, null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                taskId = c.getInt(0);
+                taskName = c.getString(1);
+                taskDescription = c.getString(2);
+                taskRewardExp = c.getInt(3);
+                taskRewardMoney = c.getInt(4);
+                taskMinLevel = c.getInt(5);
+                taskAntivirus = c.getInt(6);
+                taskEnergy = c.getInt(7);
+                taskTime = c.getInt(8);
+                taskLevel = c.getInt(9);
+                taskTimesCompleted = c.getInt(10);
+                taskTimesForLevelling = c.getInt(11);
+
+                tasks.add(new Tasks(taskId, taskName, taskRewardExp, taskRewardMoney, taskDescription, taskMinLevel, taskEnergy, taskAntivirus, taskTime, taskLevel, taskTimesCompleted, taskTimesForLevelling));
+
+            } while (c.moveToNext());
+        }
     }
 
 
@@ -120,7 +162,6 @@ public class Fragment3 extends Fragment {
                 tasksUnlocked.add(tasks.get(i));
             }
         }
-        //gestion de recursos con fruit ninja
 
         return tasksUnlocked;
     }
@@ -128,6 +169,9 @@ public class Fragment3 extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        listView = (ListView) getView().findViewById(R.id.listView_tasks);
+//        //listView.setAdapter(null);
+//        listView.setAdapter(customAdapter);
 
     }
 
@@ -158,22 +202,50 @@ public class Fragment3 extends Fragment {
         money.setTypeface(font);
 
         Button button = (Button)getView().findViewById(R.id.hackDevices);
-        Button button2 = (Button)getView().findViewById(R.id.buttonTable);
+        Button button2 = (Button)getView().findViewById(R.id.buttonMap);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HackDevices.class);
-                intent.putExtra("player", player);
-                startActivity(intent);
+                //tasks.removeAll(tasks);
+                c = db.query("items", new String[]{"id"}, "adquired>=? AND id=?", new String[] {"1","3"}, null, null, null, null);
+
+                if (c.moveToFirst()) {
+                    Intent intent = new Intent(getActivity(), HackDevices.class);
+                    intent.putExtra("player", player);
+                    startActivity(intent);
+
+                }else{
+                    Toast.makeText(getContext(), "Necesitas una antena para hackear redes wifi", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapsActivity.class);
-               // intent.putExtra("player", player);
-                startActivity(intent);
+                LocationManager locationManager;
+                boolean gps_enabled= false,network_enabled = false;
+
+                    locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                try{
+                    gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                }catch(Exception ex){}
+
+                try{
+                    network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                }catch(Exception ex){}
+
+                if(gps_enabled || network_enabled) {
+                    Intent intent = new Intent(getActivity(), MapsActivity.class);
+                    intent.putExtra("backMenu", 1);
+                    startActivity(intent);
+
+                }else{
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(myIntent);
+                    Toast.makeText(getContext(), "Debes activar la ubicación", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -198,7 +270,7 @@ public class Fragment3 extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (this.isVisible()) {
             updateTextViews();
-            customAdapter.notifyDataSetChanged();
+            //customAdapter.notifyDataSetChanged();
             if (!isVisibleToUser) {
             }
         }
@@ -210,5 +282,10 @@ public class Fragment3 extends Fragment {
         if (!db.isOpen()) {
             db = dbManager.getWritableDatabase();
         }
+//        tasks=task.getTasksFromDBToArray(db);
+//        customAdapter= new TasksAdapter(getContext(), tasks, font, db, getActivity());
+//        listView.setAdapter(customAdapter);
+
+
     }
 }

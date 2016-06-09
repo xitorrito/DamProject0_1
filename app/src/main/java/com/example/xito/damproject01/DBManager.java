@@ -19,8 +19,8 @@ public class DBManager extends SQLiteOpenHelper {
             "description TEXT, minLevel INTEGER, rewardExp INTEGER,rewardMoney INTEGER, time INTEGER, energy INTEGER, antivirus INTEGER, taskLevel INTEGER," +
             " timesCompleted INTEGER, timesForLevelling INTEGER)";
     String createTableTienda = "CREATE TABLE IF NOT EXISTS Items (id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            " item TEXT, description TEXT, priceMoney INTEGER, upgradeEnergy INTEGER, upgradeEfficacy INTEGER)";
-    String createTableWifiHacks = "CREATE TABLE IF NOT EXISTS WifiHacks (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " item TEXT, description TEXT, priceMoney INTEGER, upgradeEnergy INTEGER, upgradeEfficacy INTEGER, adquired INTEGER)";
+    String createTableWifiHacks = "CREATE TABLE IF NOT EXISTS Networks (id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " networkName TEXT, macAddress TEXT, latitude REAL, longitude REAL)";
 
     private static DBManager uniqueInstance;
@@ -35,10 +35,10 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(createTableJugador);
         db.execSQL(createTableTareas);
         db.execSQL(createTableTienda);
+        db.execSQL(createTableWifiHacks);
         insertTasks(db);
         insertPlayer(db);
         insertMarket(db);
-        Log.e("bd creada","soy la bd");
     }
 
     public static synchronized DBManager getInstance(Context context) {
@@ -200,9 +200,9 @@ public class DBManager extends SQLiteOpenHelper {
         itemUpgradeEfficacy.add(1);
 
         //2
-        itemName.add("Modem");
+        itemName.add("Antena Wifi Largo Alcance");
         itemDescription.add("Permite hackear redes wifi");
-        itemPriceMoney.add(110);
+        itemPriceMoney.add(200);
         itemUpgradeEnergy.add(0);
         itemUpgradeEfficacy.add(0);
 

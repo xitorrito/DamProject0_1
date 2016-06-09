@@ -43,16 +43,6 @@ public class NumberAdapter extends BaseAdapter  {
     private int number;
 
 
-    public NumberAdapter(Context context, ArrayList<Integer> numbers, Typeface font, Player player, Activity activity, SQLiteDatabase db) {
-        this.context = context;
-        this.mNumbers=numbers;
-        this.font=font;
-        this.activity=activity;
-        this.player=player;
-        this.db=db;
-
-    }
-
     public NumberAdapter(Context context, ArrayList<Integer> numbers, ArrayList<Integer> numbersForSearch) {
         this.context=context;
         this.mNumbers=numbers;
@@ -81,6 +71,7 @@ public class NumberAdapter extends BaseAdapter  {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         number = mNumbers.get(position);
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/LipbyChonk.ttf");
 
         if(convertView == null){
             viewHolder = new ViewHolder();
@@ -98,7 +89,7 @@ public class NumberAdapter extends BaseAdapter  {
         viewHolder.number.setTypeface(font);
 
         viewHolder.number.setText(String.valueOf(mNumbers.get(position)));
-
+        viewHolder.number.setTypeface(font);
         viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {

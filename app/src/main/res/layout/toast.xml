@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp"
-    android:background="@android:color/darker_gray" >
+    android:background="@color/accent_material_dark" >
 
     <ImageView android:id="@+id/imageToast"
         android:layout_width="wrap_content"

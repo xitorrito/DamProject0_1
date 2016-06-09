@@ -184,14 +184,15 @@ public class TasksAdapter extends BaseAdapter  {
                         @Override
                         public void onDataChanged(boolean success) {
                             if(success){
+                                /*
                                 if(task.getTaskTimesForLevelling()!=task.getTaskTimesCompleted())
                                     task.setTaskTimesCompleted(task.getTaskTimesCompleted()+1);
                                 Log.e("task times",task.getTaskTimesCompleted()+"");
-                                Log.e("times for compl",task.getTaskTimesForLevelling()+"");
+                                Log.e("times for compl",task.getTaskTimesForLevelling()+"");*/
                             }else{
                             }
                             if(mOnDataChangeListener!=null){
-                                mOnDataChangeListener.onDataChanged();
+                                mOnDataChangeListener.onDataChanged(playerLevel);
                             }
                             showToastTaskFinished(success);
                         }
@@ -252,7 +253,7 @@ public class TasksAdapter extends BaseAdapter  {
     }
 
     public interface OnDataChangeListener{
-        void onDataChanged();
+        void onDataChanged(int playerlevel);
     }
 
 

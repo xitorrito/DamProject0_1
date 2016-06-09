@@ -50,17 +50,17 @@ public class ProgressBarAsyncTask extends AsyncTask<Integer, Integer, Integer> {
         }
         if((difference)<0) {
             if ((difference) == -1) {
-                probability = 35;
+                probability = 15;
             }
             if ((difference) <= -2) {
-                probability = 20;
+                probability = 5;
             }
         }else{
             if (difference==1) {
-                probability=85;
+                probability=95;
             }
             if (difference>=2){
-                probability=100;
+                probability=99;
             }
         }
 

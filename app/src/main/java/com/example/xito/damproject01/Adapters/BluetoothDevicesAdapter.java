@@ -79,7 +79,7 @@ public class BluetoothDevicesAdapter extends BaseAdapter  {
         if(convertView == null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView=inflater.inflate(R.layout.item_bluetooth_devices,null);
+            convertView=inflater.inflate(R.layout.item_wifi_network,null);
             viewHolder.cardView = (CardView) convertView.findViewById(R.id.card_view);
             viewHolder.deviceName =(TextView)convertView.findViewById(R.id.device_name);
             viewHolder.devideAddress =(TextView)convertView.findViewById(R.id.device_address);

@@ -5,11 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,14 +84,20 @@ public class MarketAdapter extends BaseAdapter  {
             viewHolder.itemPriceMoney =(TextView)convertView.findViewById(R.id.itemPrice);
             viewHolder.itemUpgradeEfficacy =(TextView)convertView.findViewById(R.id.upgradeEfficacy);
             viewHolder.itemUpgradeEnergy =(TextView)convertView.findViewById(R.id.upgradeEnergy);
-           /* if(item.getItemUpgradeEfficacy()==0) {
-                if(item.getItemUpgradeEnergy()!=0)
+            viewHolder.imageView =(ImageView) convertView.findViewById(R.id.imageMarket);
+            if(item.getItemUpgradeEfficacy()==0) {
+                if(item.getItemUpgradeEnergy()!=0){
                     viewHolder.itemUpgradeEnergy.setVisibility(View.VISIBLE);
-            }else{
+                    viewHolder.imageView.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(),R.drawable.energy,null));
+                }
 
+            }else{
+                viewHolder.imageView.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(),R.drawable.bullseye,null));
                 viewHolder.itemUpgradeEfficacy.setVisibility(View.VISIBLE);
 
-            }*/
+            }
+            if(item.getItemUpgradeEfficacy()==0&&item.getItemUpgradeEnergy()==0)
+                viewHolder.imageView.setVisibility(View.GONE);
 
             convertView.setTag(viewHolder);
         }else{
@@ -126,9 +134,10 @@ public class MarketAdapter extends BaseAdapter  {
                    if(mOnDataChangeListener!=null){
                        mOnDataChangeListener.onDataChanged();
                    }
-                   item.setItemPriceMoney(item.getItemPriceMoney()+20);
+                   item.setItemPriceMoney(item.getItemPriceMoney()+5);
                    ContentValues contentValues = new ContentValues();
                    contentValues.put("priceMoney",item.getItemPriceMoney());
+                   contentValues.put("adquired",1);
                    db.update("items",contentValues, "id="+item.getItemId(),null);
                    notifyDataSetChanged();
 
@@ -154,6 +163,7 @@ public class MarketAdapter extends BaseAdapter  {
         private TextView itemPriceMoney;
         private TextView itemUpgradeEnergy;
         private TextView itemUpgradeEfficacy;
+        private ImageView imageView;
     }
 
 

@@ -1,11 +1,16 @@
 package com.example.xito.damproject01;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.location.LocationManager;
+import android.net.wifi.ScanResult;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -13,14 +18,17 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.xito.damproject01.Adapters.NumberAdapter;
+import com.example.xito.damproject01.Models.Networks;
 import com.example.xito.damproject01.Models.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class HackingDevice extends Activity {
@@ -48,7 +56,6 @@ public class HackingDevice extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hacking_device);
-
         numbersForTable = new ArrayList<>();
         randomNumbers = new ArrayList<>();
         numbersForSearch = new ArrayList<>();
@@ -78,6 +85,8 @@ public class HackingDevice extends Activity {
         }
 
 
+
+
         table= (GridView)findViewById(R.id.table);
         table.setVisibility(View.INVISIBLE);
         text1= (TextView) findViewById(R.id.textTable1);
@@ -85,6 +94,12 @@ public class HackingDevice extends Activity {
         textCountDown= (TextView) findViewById(R.id.textCountDown);
         text2.setVisibility(View.INVISIBLE);
         text1.setVisibility(View.INVISIBLE);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/LipbyChonk.ttf");
+        textCountDown.setTypeface(font);
+        text2.setTypeface(font);
+        text1.setTypeface(font);
+
 
         progressBar=(ProgressBar) findViewById(R.id.progressTable);
         progressBar.setVisibility(View.INVISIBLE);
@@ -134,7 +149,6 @@ public class HackingDevice extends Activity {
                         }else{
                             showDialogGameCompleted();
                             asynktaskBar.cancel(true);
-                            //Dialogo y mapa
                         }
                     }
                 });
@@ -143,10 +157,6 @@ public class HackingDevice extends Activity {
             }
         };
         Count.start();
-
-
-
-
 
 
        /* CountDownTimer countDownTimer;
@@ -299,15 +309,54 @@ public class HackingDevice extends Activity {
 
     private void showDialogGameCompleted(){
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HackingDevice.this);
-        alertDialogBuilder.setMessage("Ya tienes todos los datos de la victima\n\n+100 XP  +100$")
+        alertDialogBuilder.setMessage("¡Has conseguido acceder a la red wifi de la víctima!\n\n+100 XP  +100$")
                 .setTitle("Hackeo completado")
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        int playerLevel=Player.player.getPlayerLevel();
                         Player.player.setPlayerExp(Player.player.getPlayerExp()+100);
                         Player.player.setPlayerMoney(Player.player.getPlayerMoney()+100);
+                       /* if(playerLevel!=Player.player.getPlayerLevel()){
+                            Player.showDialogNewLevel();
+                        }*/
 
+                        Intent intent = new Intent(getApplicationContext(),HackDevices.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                })
+                .setNeutralButton("Ver mapa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LocationManager locationManager;
+                        boolean gps_enabled= false,network_enabled = false;
+
+                        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                        try{
+                            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        }catch(Exception ex){}
+
+                        try{
+                            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                        }catch(Exception ex){}
+
+                        if(gps_enabled || network_enabled){
+                            Intent intent = getIntent();
+                            Intent intent2 = new Intent(getApplicationContext(), MapsActivity.class);
+                            ScanResult scanResult = intent.getExtras().getParcelable("network");
+                            intent2.putExtra("network", scanResult);
+                            startActivity(intent2);
+                            finish();
+
+                        }else {
+                            Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(myIntent);
+                            Toast.makeText(HackingDevice.this, "Debes activar la ubicación", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 })
                 .setCancelable(false)
@@ -360,5 +409,17 @@ public class HackingDevice extends Activity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        asynktaskBar.cancel(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        asynktaskBar.cancel(true);
+    }
 }
 
